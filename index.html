@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master de Ativos & Projeção de Renda</title>
+  <title>Painel Master Pro - Valuation, Renda & Meta de Liberdade</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,16 +16,16 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master de Ativos</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro, Valuation & Renda</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Pro</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Plataforma de Investimentos</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, preço justo de Graham, preço médio e fluxo de dividendos</p>
+        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, preço médio, dividendos e meta de independência</p>
       </div>
     </div>
 
     <!-- Seletor de Ativos -->
     <div class="space-y-3">
-      <label class="block text-xs font-bold uppercase text-zinc-400">Selecione uma Empresa para Analisar</label>
+      <label class="block text-xs font-bold uppercase text-zinc-400">Selecione o Ativo de Referência (B3)</label>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="container-ativos">
         <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5">
           <div class="font-bold text-xs text-zinc-100">VALE3</div>
@@ -111,6 +111,27 @@
       </div>
     </div>
 
+    <!-- Nova Ferramenta: Calculadora de Meta de Viver de Renda -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="target" class="w-4 h-4 text-emerald-400"></i> Meta de Independência Financeira
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Renda Mensal Desejada (R$)</label>
+          <input type="number" id="meta-renda-desejada" value="3000" oninput="calcularMetaIndependencia()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+        </div>
+        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex flex-col justify-center">
+          <div class="text-[10px] text-zinc-400 font-bold uppercase">Patrimônio Necessário:</div>
+          <div id="meta-patrimonio-necessario" class="text-sm font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
+        </div>
+      </div>
+      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+        <span class="text-zinc-400 font-bold">Tempo estimado com o seu aporte atual:</span>
+        <span id="meta-tempo-estimado" class="text-amber-400 font-bold">0 anos</span>
+      </div>
+    </div>
+
     <!-- Calculadora de Preço Médio -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -191,7 +212,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta educacional avançada para estudos de volatilidade, valuation e simulação patrimonial na B3.</span>
+      <span>Plataforma profissional de estudos fundamentalistas, volatilidade e simulação de independência financeira na B3.</span>
     </div>
 
   </div>
@@ -277,6 +298,35 @@
       document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
+    function calcularMetaIndependencia() {
+      const rendaDesejada = Number(document.getElementById('meta-renda-desejada').value) || 0;
+      const info = dadosEmpresas[ativoAtual];
+      
+      // Patrimônio necessário = (Renda Anual Desejada) / (Dividend Yield)
+      const rendaAnual = rendaDesejada * 12;
+      const patrimonioNecessario = info.dyNum > 0 ? rendaAnual / info.dyNum : 0;
+
+      document.getElementById('meta-patrimonio-necessario').innerText = patrimonioNecessario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      // Estimar tempo com base no aporte atual e taxa do ativo
+      const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
+      const cenario = document.getElementById('select-cenario').value;
+      let taxaAnual = info.taxa;
+      if (cenario === 'cdi') taxaAnual = 0.105;
+      if (cenario === 'conservador') taxaAnual = 0.07;
+      const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
+
+      let montante = 0;
+      let meses = 0;
+      while (montante < patrimonioNecessario && meses < 1200) { // teto de 100 anos
+        montante = (montante + aporteMensal) * (1 + taxaMensal);
+        meses++;
+      }
+
+      const anosEst = (meses / 12).toFixed(1);
+      document.getElementById('meta-tempo-estimado').innerText = `Aprox. ${anosEst} anos`;
+    }
+
     let meuGrafico = null;
 
     function calcularJuros() {
@@ -320,6 +370,7 @@
       document.getElementById('resultado-renda').innerText = rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês';
 
       atualizarGrafico(rotulos, dadosMontante, dadosBolso);
+      calcularMetaIndependencia();
     }
 
     function atualizarGrafico(rotulos, montante, bolso) {
@@ -367,15 +418,17 @@
       const info = dadosEmpresas[ativoAtual];
       const anos = document.getElementById('input-anos').value;
       const aporte = document.getElementById('input-aporte').value;
+      const metaRenda = document.getElementById('meta-renda-desejada').value;
       
-      const texto = `📊 *Estudo de Ativo - ${info.nome}* (${info.setor})\n` +
+      const texto = `📊 *Painel Pro - ${info.nome}* (${info.setor})\n` +
                     `💰 Cotação Atual: ${info.precoStr}\n` +
                     `📈 P/L: ${info.pl} | DY: ${info.dyStr} | ROE: ${info.roe}\n` +
                     `🎯 Preço Justo (Graham): ${info.graham}\n\n` +
-                    `🚀 *Projeção de Longo Prazo (${anos} anos, Aportes de R$ ${aporte}/mês):*\n` +
-                    `• Patrimônio Estimado: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n` +
-                    `• Renda Passiva Estimada: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês\n\n` +
-                    `_Gerado via Painel Master de Ativos B3_`;
+                    `🚀 *Simulação (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
+                    `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n` +
+                    `• Renda Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês\n` +
+                    `🎯 Meta de R$ ${metaRenda}/mês: ${document.getElementById('meta-tempo-estimado').innerText}\n\n` +
+                    `_Gerado via Painel Master Pro B3_`;
 
       navigator.clipboard.writeText(texto).then(() => {
         alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
