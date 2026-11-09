@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Trading Desk</title>
+  <title>Painel Master Pro - Finanças & Trading Desk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,10 +21,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Trading Desk & Analytics</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-mono font-bold">PRO TERMINAL</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Finanças & Trading Desk</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-mono font-bold">CONTROLO TOTAL</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Cotações ao vivo, valuation, gestão de risco e diário de operações</p>
+        <p class="text-xs text-zinc-400 mt-1">Cotações ao vivo, gestão de risco, diário de trades e orçamento</p>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="forcarAtualizacaoManual()" title="Atualizar Cotações Agora" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
@@ -111,6 +111,33 @@
       </div>
       <div class="w-full h-72 bg-zinc-950 p-2 rounded-xl border border-zinc-900 flex items-center justify-center">
         <canvas id="graficoTrading"></canvas>
+      </div>
+    </div>
+
+    <!-- MÓDULO DE CONTROLO DE FINANÇAS & ORÇAMENTO -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i> Controlo de Finanças Mensais
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Receita Mensal Líquida (R$)</label>
+          <input type="number" id="fin-receita" value="6500" step="100" oninput="calcularFinancas()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 font-mono focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Despesas Fixas & Variáveis (R$)</label>
+          <input type="number" id="fin-despesas" value="3800" step="100" oninput="calcularFinancas()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-rose-400 font-mono focus:outline-none">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-center">
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Saldo / Caixa Disponível</div>
+          <div id="fin-saldo" class="text-sm font-mono font-bold text-emerald-400 mt-1">R$ 0,00</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Taxa de Poupança</div>
+          <div id="fin-taxa" class="text-sm font-mono font-bold text-zinc-100 mt-1">0%</div>
+        </div>
       </div>
     </div>
 
@@ -209,12 +236,12 @@
     const API_URL = "https://painel-financeiro-api-f1cl.onrender.com/api/cotacao";
 
     const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", volatilidade: 0.18, tipo: "acao" },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", volatilidade: 0.24, tipo: "acao" },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", volatilidade: 0.14, tipo: "acao" },
-      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", volatilidade: 0.16, tipo: "acao" },
-      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", volatilidade: 0.20, tipo: "acao" },
-      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0%", roe: "N/A", refVal: "Alta Volatilidade", volatilidade: 0.55, tipo: "cripto" }
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", volatilidade: 0.18 },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", volatilidade: 0.24 },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", volatilidade: 0.14 },
+      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", volatilidade: 0.16 },
+      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", volatilidade: 0.20 },
+      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0%", roe: "N/A", refVal: "Alta Volatilidade", volatilidade: 0.55 }
     };
 
     let ativoAtual = 'VALE3';
@@ -300,6 +327,17 @@
       });
     }
 
+    function calcularFinancas() {
+      const receita = Number(document.getElementById('fin-receita').value) || 0;
+      const despesas = Number(document.getElementById('fin-despesas').value) || 0;
+      const saldo = receita - despesas;
+      const taxa = receita > 0 ? (saldo / receita) * 100 : 0;
+
+      document.getElementById('fin-saldo').innerText = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
+      document.getElementById('fin-taxa').innerText = `${taxa.toFixed(1)}%`;
+      document.getElementById('fin-saldo').className = saldo >= 0 ? "text-sm font-mono font-bold text-emerald-400 mt-1" : "text-sm font-mono font-bold text-rose-400 mt-1";
+    }
+
     function calcularTrade() {
       const entrada = Number(document.getElementById('trade-entrada').value) || 0;
       const stop = Number(document.getElementById('trade-stop').value) || 0;
@@ -371,6 +409,7 @@
     }
 
     selecionarAtivo('VALE3');
+    calcularFinancas();
     renderizarTabelaTrades();
   </script>
 </body>
