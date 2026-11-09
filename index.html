@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Trading Desk & Analytics</title>
+  <title>Painel Master Pro - Trading Desk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,10 +21,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Allocation & Trade</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-mono font-bold">Trading Desk & Pro</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Trading Desk & Analytics</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-mono font-bold">PRO TERMINAL</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Valuation, diário de trades, stress test, alocação e gráficos profissionais</p>
+        <p class="text-xs text-zinc-400 mt-1">Cotações ao vivo, valuation, gestão de risco e diário de operações</p>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="forcarAtualizacaoManual()" title="Atualizar Cotações Agora" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
@@ -179,65 +179,6 @@
       </div>
     </div>
 
-    <!-- Módulo de Rebalanceamento de Carteira -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Rebalanceamento Inteligente (Asset Allocation)
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Ações (%)</label>
-          <input type="number" id="aloc-acoes" value="60" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação FIIs (%)</label>
-          <input type="number" id="aloc-fiis" value="25" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Cripto (%)</label>
-          <input type="number" id="aloc-cripto" value="15" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
-        </div>
-      </div>
-      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2 text-xs">
-        <div class="flex justify-between"><span class="text-zinc-400">Patrimônio Ações:</span><span id="patrimonio-acoes" class="font-bold text-zinc-100">R$ 30.000</span></div>
-        <div class="flex justify-between"><span class="text-zinc-400">Patrimônio FIIs:</span><span id="patrimonio-fiis" class="font-bold text-zinc-100">R$ 12.500</span></div>
-        <div class="flex justify-between"><span class="text-zinc-400">Patrimônio Cripto:</span><span id="patrimonio-cripto" class="font-bold text-zinc-100">R$ 7.500</span></div>
-        <div class="border-t border-zinc-800 pt-2 flex justify-between items-center">
-          <span class="font-bold text-emerald-400">Sugestão de Aporte (R$ 1.000):</span>
-          <span id="sugestao-aporte" class="font-bold text-emerald-400">Aporte em Ações</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Módulo de Stress Test -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> Stress Test & Oportunidade
-        </h2>
-        <select id="select-crise" onchange="calcularStressTest()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-amber-400 font-bold focus:outline-none">
-          <option value="0">Cenário Normal (Atual)</option>
-          <option value="0.15">Correção Leve (-15%)</option>
-          <option value="0.30">Bear Market (-30%)</option>
-          <option value="0.50">Pânico Severo (-50%)</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço em Stress</div>
-          <div id="stress-preco" class="text-sm font-bold text-amber-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Unidades com Aporte</div>
-          <div id="stress-qtd" class="text-sm font-bold text-emerald-400 mt-1">0 un</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Dividend Yield Ref.</div>
-          <div id="stress-dy" class="text-sm font-bold text-zinc-100 mt-1">0% a.a.</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Calculadora de Preço Médio -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -255,36 +196,6 @@
       </div>
     </div>
 
-    <!-- Simulador de Juros Compostos & Projeção -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i> Projeção Patrimonial & Juros
-        </h2>
-        <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
-          <option value="ativo">Taxa do Ativo</option>
-          <option value="cdi">CDI (10.5% a.a.)</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="space-y-1"><label class="block text-xs font-bold uppercase text-zinc-400">Aporte Mensal (R$)</label><input type="number" id="input-aporte" value="500" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none"></div>
-        <div class="space-y-1"><label class="block text-xs font-bold uppercase text-zinc-400">Prazo (Anos)</label><input type="number" id="input-anos" value="10" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none"></div>
-      </div>
-      <div class="w-full h-64 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
-        <canvas id="graficoJuros"></canvas>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 font-bold uppercase">Patrimônio Acumulado:</div>
-          <div id="resultado-total" class="text-base font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
-        </div>
-        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 font-bold uppercase">Renda Passiva Estimada:</div>
-          <div id="resultado-renda" class="text-base font-bold text-amber-400 mt-0.5">R$ 0,00 /mês</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Botão WhatsApp -->
     <button onclick="copiarResumoWhatsApp()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
       <i data-lucide="share-2" class="w-4 h-4"></i> Copiar Resumo para o WhatsApp
@@ -298,19 +209,16 @@
     const API_URL = "https://painel-financeiro-api-f1cl.onrender.com/api/cotacao";
 
     const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", volatilidade: 0.18, taxa: 0.12, tipo: "acao" },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", volatilidade: 0.24, taxa: 0.13, tipo: "acao" },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", volatilidade: 0.14, taxa: 0.11, tipo: "acao" },
-      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", volatilidade: 0.16, taxa: 0.14, tipo: "acao" },
-      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", volatilidade: 0.20, taxa: 0.12, tipo: "acao" },
-      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0%", roe: "N/A", refVal: "Alta Volatilidade", volatilidade: 0.55, taxa: 0.18, tipo: "cripto" }
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", volatilidade: 0.18, tipo: "acao" },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", volatilidade: 0.24, tipo: "acao" },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", volatilidade: 0.14, tipo: "acao" },
+      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", volatilidade: 0.16, tipo: "acao" },
+      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", volatilidade: 0.20, tipo: "acao" },
+      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0%", roe: "N/A", refVal: "Alta Volatilidade", volatilidade: 0.55, tipo: "cripto" }
     };
 
     let ativoAtual = 'VALE3';
-    let ultimoMontanteCalculado = 0;
-    let ultimaRendaCalculada = 0;
     let graficoTradingInst = null;
-    let graficoJurosInst = null;
 
     function fazerLogout() {
       localStorage.removeItem("painel_autenticado");
@@ -356,13 +264,9 @@
 
       renderizarGraficoTrading(info.precoBase, info.volatilidade);
       calcularTrade();
-      calcularStressTest();
-      calcularRebalanceamento();
       calcularPrecoMedio();
-      calcularJuros();
     }
 
-    // Botão de Atualização Manual com animação
     async function forcarAtualizacaoManual() {
       const icone = document.getElementById('icone-refresh');
       icone.classList.add('animate-spin');
@@ -370,7 +274,6 @@
       setTimeout(() => icone.classList.remove('animate-spin'), 800);
     }
 
-    // Atualização Automática a cada 30 segundos em segundo plano
     setInterval(() => {
       selecionarAtivo(ativoAtual, true);
     }, 30000);
@@ -451,22 +354,6 @@
       `).join('');
     }
 
-    function calcularRebalanceamento() {
-      const valAcoes = 30000, valFiis = 12500, valCripto = 7500, total = 50000;
-      document.getElementById('patrimonio-acoes').innerText = `R$ ${valAcoes.toLocaleString('pt-BR')} (${(valAcoes/total*100).toFixed(1)}%)`;
-      document.getElementById('patrimonio-fiis').innerText = `R$ ${valFiis.toLocaleString('pt-BR')} (${(valFiis/total*100).toFixed(1)}%)`;
-      document.getElementById('patrimonio-cripto').innerText = `R$ ${valCripto.toLocaleString('pt-BR')} (${(valCripto/total*100).toFixed(1)}%)`;
-    }
-
-    function calcularStressTest() {
-      const info = dadosEmpresas[ativoAtual];
-      const queda = Number(document.getElementById('select-crise').value) || 0;
-      const precoStress = info.precoBase * (1 - queda);
-      document.getElementById('stress-preco').innerText = precoStress.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('stress-qtd').innerText = `${Math.floor(500 / precoStress)} un`;
-      document.getElementById('stress-dy').innerText = `${((info.dyNum / (1 - queda))*100).toFixed(1)}% a.a.`;
-    }
-
     function calcularPrecoMedio() {
       const qA = Number(document.getElementById('calc-qtd-atual').value) || 0;
       const pA = Number(document.getElementById('calc-pm-atual').value) || 0;
@@ -477,38 +364,9 @@
       document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
     }
 
-    function calcularJuros() {
-      const aporte = Number(document.getElementById('input-aporte').value) || 0;
-      const anos = Number(document.getElementById('input-anos').value) || 0;
-      const cenario = document.getElementById('select-cenario').value;
-      const info = dadosEmpresas[ativoAtual];
-      let taxaAnual = cenario === 'cdi' ? 0.105 : info.taxa;
-      let taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
-
-      let montante = 0, rotulos = [], dados = [];
-      for (let ano = 0; ano <= anos; ano++) {
-        rotulos.push(`Ano ${ano}`);
-        dados.push(montante);
-        for (let m = 0; m < 12; m++) { if (ano < anos) montante = (montante + aporte) * (1 + taxaMensal); }
-      }
-      ultimoMontanteCalculado = montante;
-      ultimaRendaCalculada = (montante * (info.dyNum > 0 ? info.dyNum : 0.06)) / 12;
-
-      document.getElementById('resultado-total').innerText = montante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('resultado-renda').innerText = ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }) + ' /mês';
-
-      const ctx = document.getElementById('graficoJuros').getContext('2d');
-      if (graficoJurosInst) graficoJurosInst.destroy();
-      graficoJurosInst = new Chart(ctx, {
-        type: 'line',
-        data: { labels: rotulos, datasets: [{ label: 'Patrimônio', data: dados, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.3 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-    }
-
     function copiarResumoWhatsApp() {
       const info = dadosEmpresas[ativoAtual];
-      const texto = `📊 *Painel Trading Desk & Analytics - ${info.nome}*\n💰 Cotação Real: ${info.precoStr}\n• Patrimônio Projetado: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+      const texto = `📊 *Trading Desk - ${info.nome}*\n💰 Cotação Real: ${info.precoStr}\n• P/L: ${info.pl} | DY: ${info.dyStr}`;
       navigator.clipboard.writeText(texto).then(() => alert("Resumo copiado para a área de transferência!"));
     }
 
