@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Simuladores & Gráficos Interativos</title>
+  <title>Painel Master Pro - Rebalanceamento & Analytics</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,10 +16,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Analytics</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Gráficos Interativos Pro</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Allocation</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro & Rebalanceamento</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, stress test, preço médio e simulador gráfico avançado</p>
+        <p class="text-xs text-zinc-400 mt-1">Valuation, volatilidade, stress test, gráficos interativos e alocação estratégica</p>
       </div>
     </div>
 
@@ -83,6 +83,47 @@
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
           <div id="label-ind-4" class="text-[10px] text-zinc-400 uppercase font-bold">Referência</div>
           <div id="val-graham" class="text-sm font-bold text-amber-400 mt-1">R$ 82,10</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOVO: Módulo de Rebalanceamento de Carteira (Asset Allocation) -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Rebalanceamento Inteligente (Asset Allocation)
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="space-y-1">
+          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Ações (%)</label>
+          <input type="number" id="aloc-acoes" value="60" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação FIIs (%)</label>
+          <input type="number" id="aloc-fiis" value="25" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Cripto/BTC (%)</label>
+          <input type="number" id="aloc-cripto" value="15" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
+        </div>
+      </div>
+
+      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2 text-xs">
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Patrimônio Atual em Ações:</span>
+          <span id="patrimonio-acoes" class="font-bold text-zinc-100">R$ 30.000,00</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Patrimônio Atual em FIIs:</span>
+          <span id="patrimonio-fiis" class="font-bold text-zinc-100">R$ 12.500,00</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Patrimônio Atual em Cripto:</span>
+          <span id="patrimonio-cripto" class="font-bold text-zinc-100">R$ 7.500,00</span>
+        </div>
+        <div class="border-t border-zinc-800 pt-2 flex justify-between items-center">
+          <span class="font-bold text-emerald-400">Sugestão do Próximo Aporte (R$ 1.000):</span>
+          <span id="sugestao-aporte" class="font-bold text-emerald-400 text-sm">Aporte em Ações</span>
         </div>
       </div>
     </div>
@@ -174,7 +215,7 @@
       </div>
     </div>
 
-    <!-- Simulador Avançado & Gráficos Interativos Dinâmicos -->
+    <!-- Simulador Avançado & Gráficos Interativos -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -231,7 +272,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta avançada com gráficos interativos e simuladores multi-cenário para a B3 e Criptoativos.</span>
+      <span>Ferramenta avançada com rebalanceamento de carteira e simulações profissionais para a B3 e Criptoativos.</span>
     </div>
 
   </div>
@@ -298,6 +339,7 @@
       atualizarEstatisticasPeriodo();
       calcularStressTest();
       calcularPrecoMedio();
+      calcularRebalanceamento();
       calcularJuros();
     }
 
@@ -343,6 +385,37 @@
       const novoPM = totalAcoes > 0 ? custoTotal / totalAcoes : 0;
 
       document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
+    }
+
+    function calcularRebalanceamento() {
+      const pAcoes = Number(document.getElementById('aloc-acoes').value) || 0;
+      const pFiis = Number(document.getElementById('aloc-fiis').value) || 0;
+      const pCripto = Number(document.getElementById('aloc-cripto').value) || 0;
+
+      const valAcoes = 30000;
+      const valFiis = 12500;
+      const valCripto = 7500;
+      const totalPatrimonio = valAcoes + valFiis + valCripto;
+
+      const realAcoes = (valAcoes / totalPatrimonio) * 100;
+      const realFiis = (valFiis / totalPatrimonio) * 100;
+      const realCripto = (valCripto / totalPatrimonio) * 100;
+
+      document.getElementById('patrimonio-acoes').innerText = `${valAcoes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realAcoes.toFixed(1)}%)`;
+      document.getElementById('patrimonio-fiis').innerText = `${valFiis.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realFiis.toFixed(1)}%)`;
+      document.getElementById('patrimonio-cripto').innerText = `${valCripto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realCripto.toFixed(1)}%)`;
+
+      // Definir desvio máximo para sugerir aporte
+      let desvioAcoes = pAcoes - realAcoes;
+      let desvioFiis = pFiis - realFiis;
+      let desvioCripto = pCripto - realCripto;
+
+      let sugestao = "Ações (Equilibrado)";
+      if (desvioAcoes >= desvioFiis && desvioAcoes >= desvioCripto) sugestao = "Aportar em Ações 📈";
+      else if (desvioFiis >= desvioAcoes && desvioFiis >= desvioCripto) sugestao = "Aportar em FIIs 🏢";
+      else sugestao = "Aportar em Cripto / BTC 🪙";
+
+      document.getElementById('sugestao-aporte').innerText = sugestao;
     }
 
     let meuGrafico = null;
@@ -445,12 +518,12 @@
       const anos = document.getElementById('input-anos').value;
       const aporte = document.getElementById('input-aporte').value;
       
-      const texto = `📊 *Painel Analytics Pro - ${info.nome}* (${info.setor})\n` +
+      const texto = `📊 *Painel Allocation Pro - ${info.nome}* (${info.setor})\n` +
                     `💰 Cotação Ref: ${info.precoStr}\n\n` +
                     `🚀 *Simulação Dinâmica (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
                     `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}\n` +
                     `• Retorno Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}/mês\n\n` +
-                    `_Gerado via Painel Master Analytics_`;
+                    `_Gerado via Painel Master Allocation_`;
 
       navigator.clipboard.writeText(texto).then(() => {
         alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
