@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Estudos Financeiros & Fundamentais</title>
+  <title>Painel de Estudos Financeiros & Volatilidade</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -15,10 +15,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">100% Educacional & Transparente</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Risco</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Educacional & Volatilidade</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista e simulação realista de longo prazo</p>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, indicadores de volatilidade e simulação de longo prazo</p>
       </div>
     </div>
 
@@ -74,6 +74,29 @@
       </div>
     </div>
 
+    <!-- Novo Módulo: Análise de Volatilidade e Risco -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Estudo de Volatilidade & Risco
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Volatilidade (30d)</div>
+          <div id="vol-anual" class="text-sm font-bold text-amber-400 mt-1">22.5%</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Mín / Máx (52 semanas)</div>
+          <div id="vol-minmax" class="text-xs font-bold text-zinc-100 mt-1">R$ 58,00 - R$ 75,20</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Beta (vs. Ibovespa)</div>
+          <div id="vol-beta" class="text-sm font-bold text-zinc-100 mt-1">1.05</div>
+        </div>
+      </div>
+      <p class="text-[11px] text-zinc-500 italic">* Volatilidade histórica baseada no desvio padrão dos retornos diários recentizados para estudo estatístico.</p>
+    </div>
+
     <!-- Simulador de Juros Compostos (Educação Financeira) -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -115,9 +138,21 @@
     lucide.createIcons();
 
     const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", preco: "R$ 68,50", pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45" },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", preco: "R$ 38,20", pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52" },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", preco: "R$ 32,90", pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20" }
+      VALE3: { 
+        nome: "VALE3", setor: "Mineração & Metais", preco: "R$ 68,50", 
+        pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45",
+        volAnual: "24.2%", minMax: "R$ 58,00 - R$ 78,50", beta: "1.12"
+      },
+      PETR4: { 
+        nome: "PETR4", setor: "Energia & Petróleo", preco: "R$ 38,20", 
+        pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52",
+        volAnual: "31.8%", minMax: "R$ 29,50 - R$ 42,00", beta: "1.35"
+      },
+      ITUB4: { 
+        nome: "ITUB4", setor: "Setor Financeiro", preco: "R$ 32,90", 
+        pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20",
+        volAnual: "18.5%", minMax: "R$ 26,00 - R$ 35,50", beta: "0.88"
+      }
     };
 
     function selecionarAtivo(ticker) {
@@ -138,6 +173,11 @@
       document.getElementById('val-dy').innerText = info.dy;
       document.getElementById('val-roe').innerText = info.roe;
       document.getElementById('val-divida').innerText = info.divida;
+
+      // Atualiza volatilidade
+      document.getElementById('vol-anual').innerText = info.volAnual;
+      document.getElementById('vol-minmax').innerText = info.minMax;
+      document.getElementById('vol-beta').innerText = info.beta;
     }
 
     function calcularJuros() {
