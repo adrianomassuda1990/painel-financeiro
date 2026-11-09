@@ -309,13 +309,17 @@
       const ctx = document.getElementById('graficoTrading').getContext('2d');
       if (graficoTradingInst) graficoTradingInst.destroy();
 
-      let labels = [], valores = [], base = preco * 0.95;
-      for (let i = 0; i < 20; i++) {
-        labels.push('');
-        base += (Math.random() - 0.48) * (preco * vol * 0.04);
-        valores.push(Number(base.toFixed(2)));
+      let labels = [], valores = [];
+      // Constrói os pontos de trás para a frente a partir do preço real para evitar saltos bruscos
+      let valorAtual = preco;
+      valores.unshift(valorAtual);
+      labels.unshift('');
+
+      for (let i = 0; i < 19; i++) {
+        valorAtual -= (Math.random() - 0.48) * (preco * vol * 0.03);
+        valores.unshift(Number(valorAtual.toFixed(2)));
+        labels.unshift('');
       }
-      valores[19] = preco;
 
       graficoTradingInst = new Chart(ctx, {
         type: 'line',
