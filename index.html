@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - B3, Cripto, Stress Test & Meta</title>
+  <title>Painel Master Pro - Simuladores & Gráficos Interativos</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,14 +16,14 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Pro + BTC</h1>
-          <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Ações & Criptoativos</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Analytics</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Gráficos Interativos Pro</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, preço médio, stress test e inclusão de Bitcoin</p>
+        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, stress test, preço médio e simulador gráfico avançado</p>
       </div>
     </div>
 
-    <!-- Seletor de Ativos (Incluindo BTC) -->
+    <!-- Seletor de Ativos (Ações & Bitcoin) -->
     <div class="space-y-3">
       <label class="block text-xs font-bold uppercase text-zinc-400">Selecione o Ativo de Referência</label>
       <div class="grid grid-cols-2 sm:grid-cols-6 gap-2" id="container-ativos">
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <!-- Detalhes Fundamentais & Preço Justo / Métricas -->
+    <!-- Detalhes Fundamentais & Preço Justo -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex justify-between items-center border-b border-zinc-800/80 pb-3">
         <div>
@@ -81,13 +81,13 @@
           <div id="val-roe" class="text-sm font-bold text-zinc-100 mt-1">18.4%</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-4" class="text-[10px] text-zinc-400 uppercase font-bold">Valuation / Referência</div>
+          <div id="label-ind-4" class="text-[10px] text-zinc-400 uppercase font-bold">Referência</div>
           <div id="val-graham" class="text-sm font-bold text-amber-400 mt-1">R$ 82,10</div>
         </div>
       </div>
     </div>
 
-    <!-- Módulo de Stress Test & Aporte Oportunista (Crise) -->
+    <!-- Módulo de Stress Test & Aporte Oportunista -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -117,7 +117,7 @@
       </div>
     </div>
 
-    <!-- Estatísticas por Período & Volatilidade -->
+    <!-- Faixas de Preço por Dias -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
@@ -142,27 +142,6 @@
           <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço Médio</div>
           <div id="est-media" class="text-sm font-bold text-zinc-100 mt-1">R$ 0,00</div>
         </div>
-      </div>
-    </div>
-
-    <!-- Meta de Acumulação / Independência -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="target" class="w-4 h-4 text-emerald-400"></i> Meta de Acumulação de Capital
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Renda Mensal Desejada (R$)</label>
-          <input type="number" id="meta-renda-desejada" value="3000" oninput="calcularMetaIndependencia()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
-        </div>
-        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex flex-col justify-center">
-          <div class="text-[10px] text-zinc-400 font-bold uppercase">Patrimônio Necessário:</div>
-          <div id="meta-patrimonio-necessario" class="text-sm font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
-        </div>
-      </div>
-      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-        <span class="text-zinc-400 font-bold">Tempo estimado com o seu aporte atual:</span>
-        <span id="meta-tempo-estimado" class="text-amber-400 font-bold">0 anos</span>
       </div>
     </div>
 
@@ -195,17 +174,23 @@
       </div>
     </div>
 
-    <!-- Simulador Avançado, Gráfico & Renda -->
+    <!-- Simulador Avançado & Gráficos Interativos Dinâmicos -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Projeção & Fluxo de Caixa
+          <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i> Gráficos e Projeções Dinâmicas
         </h2>
-        <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
-          <option value="ativo">Taxa Estimada do Ativo</option>
-          <option value="cdi">Renda Fixa / CDI (10.5% a.a.)</option>
-          <option value="conservador">IPCA + Juros Reais (7% a.a.)</option>
-        </select>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <select id="select-tipo-grafico" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
+            <option value="patrimonio">Evolução Patrimonial</option>
+            <option value="comparativo">Comparativo vs CDI</option>
+          </select>
+          <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
+            <option value="ativo">Taxa do Ativo</option>
+            <option value="cdi">CDI (10.5% a.a.)</option>
+            <option value="conservador">IPCA + 7%</option>
+          </select>
+        </div>
       </div>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -219,8 +204,8 @@
         </div>
       </div>
 
-      <!-- Canvas do Gráfico -->
-      <div class="w-full h-64 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
+      <!-- Canvas do Gráfico Interativo -->
+      <div class="w-full h-72 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
         <canvas id="graficoTendencia"></canvas>
       </div>
 
@@ -246,7 +231,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Plataforma profissional integrada com ações da B3 e criptoativos (Bitcoin). Ferramenta para estudos estatísticos e gestão de risco.</span>
+      <span>Ferramenta avançada com gráficos interativos e simuladores multi-cenário para a B3 e Criptoativos.</span>
     </div>
 
   </div>
@@ -340,11 +325,10 @@
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
       const unidadesAdicionais = precoStress > 0 ? (aporteMensal / precoStress).toFixed(info.tipo === 'cripto' ? 4 : 0) : 0;
       
-      let rotuloRetorno = info.tipo === 'cripto' ? "Exposição / Unidades" : "Novo DY na Queda";
-      let valorRetorno = info.tipo === 'cripto' ? `${unidadesAdicionais} sat/BTC` : `${((info.dyNum / (1 - percentualQueda))*100).toFixed(1)}% a.a.`;
+      let valorRetorno = info.tipo === 'cripto' ? `${unidadesAdicionais} fração` : `${((info.dyNum / (1 - percentualQueda))*100).toFixed(1)}% a.a.`;
 
       document.getElementById('stress-preco').innerText = precoStress.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('stress-qtd').innerText = info.tipo === 'cripto' ? `${unidadesAdicionais} fração` : `${Math.floor(aporteMensal / precoStress)} açs`;
+      document.getElementById('stress-qtd').innerText = info.tipo === 'cripto' ? `${unidadesAdicionais} un` : `${Math.floor(aporteMensal / precoStress)} açs`;
       document.getElementById('stress-dy').innerText = valorRetorno;
     }
 
@@ -361,40 +345,13 @@
       document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
     }
 
-    function calcularMetaIndependencia() {
-      const rendaDesejada = Number(document.getElementById('meta-renda-desejada').value) || 0;
-      const info = dadosEmpresas[ativoAtual];
-      
-      const taxaMeta = info.dyNum > 0 ? info.dyNum : 0.06; // Se for cripto ou ativo sem DY, usa taxa de desinvestimento de 6%
-      const rendaAnual = rendaDesejada * 12;
-      const patrimonioNecessario = rendaAnual / taxaMeta;
-
-      document.getElementById('meta-patrimonio-necessario').innerText = patrimonioNecessario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-
-      const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
-      const cenario = document.getElementById('select-cenario').value;
-      let taxaAnual = info.taxa;
-      if (cenario === 'cdi') taxaAnual = 0.105;
-      if (cenario === 'conservador') taxaAnual = 0.07;
-      const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
-
-      let montante = 0;
-      let meses = 0;
-      while (montante < patrimonioNecessario && meses < 1200) {
-        montante = (montante + aporteMensal) * (1 + taxaMensal);
-        meses++;
-      }
-
-      const anosEst = (meses / 12).toFixed(1);
-      document.getElementById('meta-tempo-estimado').innerText = `Aprox. ${anosEst} anos`;
-    }
-
     let meuGrafico = null;
 
     function calcularJuros() {
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
       const anos = Number(document.getElementById('input-anos').value) || 0;
       const cenario = document.getElementById('select-cenario').value;
+      const tipoGrafico = document.getElementById('select-tipo-grafico').value;
       const info = dadosEmpresas[ativoAtual];
       
       let taxaAnual = info.taxa;
@@ -402,22 +359,25 @@
       if (cenario === 'conservador') taxaAnual = 0.07;
 
       const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
+      let taxaCDIMensal = Math.pow(1 + 0.105, 1/12) - 1;
 
       let rotulos = [];
-      let dadosMontante = [];
-      let dadosBolso = [];
+      let dadosPrincipal = [];
+      let dadosSecundario = [];
 
       let montante = 0;
+      let montanteCDI = 0;
       let totalBolso = 0;
 
       for (let ano = 0; ano <= anos; ano++) {
         rotulos.push(`Ano ${ano}`);
-        dadosMontante.push(montante);
-        dadosBolso.push(totalBolso);
+        dadosPrincipal.push(montante);
+        dadosSecundario.push(tipoGrafico === 'comparativo' ? montanteCDI : totalBolso);
 
         for (let m = 0; m < 12; m++) {
           if (ano < anos) {
             montante = (montante + aporteMensal) * (1 + taxaMensal);
+            montanteCDI = (montanteCDI + aporteMensal) * (1 + taxaCDIMensal);
             totalBolso += aporteMensal;
           }
         }
@@ -432,14 +392,16 @@
       document.getElementById('resultado-bolso').innerText = totalBolso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
       document.getElementById('resultado-renda').innerText = rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }) + ' /mês';
 
-      atualizarGrafico(rotulos, dadosMontante, dadosBolso);
-      calcularMetaIndependencia();
+      atualizarGrafico(rotulos, dadosPrincipal, dadosSecundario, tipoGrafico);
       calcularStressTest();
     }
 
-    function atualizarGrafico(rotulos, montante, bolso) {
+    function atualizarGrafico(rotulos, dados1, dados2, tipo) {
       const ctx = document.getElementById('graficoTendencia').getContext('2d');
       if (meuGrafico) meuGrafico.destroy();
+
+      const labelDataset2 = tipo === 'comparativo' ? 'Benchmark CDI (10.5% a.a.)' : 'Total Investido do Bolso';
+      const corDataset2 = tipo === 'comparativo' ? '#3b82f6' : '#71717a';
 
       meuGrafico = new Chart(ctx, {
         type: 'line',
@@ -447,17 +409,17 @@
           labels: rotulos,
           datasets: [
             {
-              label: 'Patrimônio Total Estimado',
-              data: montante,
+              label: 'Patrimônio Projetado',
+              data: dados1,
               borderColor: '#10b981',
               backgroundColor: 'rgba(16, 185, 129, 0.1)',
               fill: true,
               tension: 0.3
             },
             {
-              label: 'Total Investido do Bolso',
-              data: bolso,
-              borderColor: '#71717a',
+              label: labelDataset2,
+              data: dados2,
+              borderColor: corDataset2,
               backgroundColor: 'transparent',
               borderDash: [5, 5],
               tension: 0.3
@@ -482,16 +444,13 @@
       const info = dadosEmpresas[ativoAtual];
       const anos = document.getElementById('input-anos').value;
       const aporte = document.getElementById('input-aporte').value;
-      const metaRenda = document.getElementById('meta-renda-desejada').value;
       
-      const texto = `📊 *Painel Pro + BTC - ${info.nome}* (${info.setor})\n` +
-                    `💰 Cotação Ref: ${info.precoStr}\n` +
-                    `📈 Volatilidade Histórica: ${(info.volatilidade*100).toFixed(0)}% a.a.\n\n` +
-                    `🚀 *Simulação (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
+      const texto = `📊 *Painel Analytics Pro - ${info.nome}* (${info.setor})\n` +
+                    `💰 Cotação Ref: ${info.precoStr}\n\n` +
+                    `🚀 *Simulação Dinâmica (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
                     `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}\n` +
-                    `• Retorno Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}/mês\n` +
-                    `🎯 Meta de R$ ${metaRenda}/mês: ${document.getElementById('meta-tempo-estimado').innerText}\n\n` +
-                    `_Ferramenta Master com Stress Test & Bitcoin_`;
+                    `• Retorno Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}/mês\n\n` +
+                    `_Gerado via Painel Master Analytics_`;
 
       navigator.clipboard.writeText(texto).then(() => {
         alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
