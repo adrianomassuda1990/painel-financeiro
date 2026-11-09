@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Estudos Financeiros & Fundamentais</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 sm:p-8 flex justify-center items-start">
+
+  <div class="w-full max-w-2xl bg-zinc-900 p-6 sm:p-8 rounded-3xl border border-zinc-800 shadow-2xl space-y-6">
+    
+    <!-- Cabeçalho -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">100% Educacional & Transparente</span>
+        </div>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista e simulação realista de longo prazo</p>
+      </div>
+    </div>
+
+    <!-- Seletor de Ativos / Empresas Reais -->
+    <div class="space-y-3">
+      <label class="block text-xs font-bold uppercase text-zinc-400">Selecione uma Empresa para Analisar</label>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="container-ativos">
+        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-4 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-1">
+          <div class="font-bold text-sm text-zinc-100">VALE3</div>
+          <div class="text-[11px] text-zinc-400">Mineração & Metais</div>
+        </button>
+        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1">
+          <div class="font-bold text-sm text-zinc-100">PETR4</div>
+          <div class="text-[11px] text-zinc-400">Energia & Petróleo</div>
+        </button>
+        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1">
+          <div class="font-bold text-sm text-zinc-100">ITUB4</div>
+          <div class="text-[11px] text-zinc-400">Setor Financeiro</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Detalhes Fundamentais do Ativo Selecionado -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <div class="flex justify-between items-center border-b border-zinc-800/80 pb-3">
+        <div>
+          <h2 id="info-ticker" class="text-lg font-bold text-emerald-400">VALE3</h2>
+          <p id="info-setor" class="text-xs text-zinc-400">Mineração & Metais</p>
+        </div>
+        <div class="text-right">
+          <div id="info-preco" class="text-lg font-bold text-zinc-100">R$ 68,50</div>
+          <div class="text-[10px] text-zinc-500">Cotação de Referência</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">P/L (Preço/Lucro)</div>
+          <div id="val-pl" class="text-sm font-bold text-zinc-100 mt-1">6.2x</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Dividend Yield</div>
+          <div id="val-dy" class="text-sm font-bold text-emerald-400 mt-1">8.5% a.a.</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">ROE (Retorno)</div>
+          <div id="val-roe" class="text-sm font-bold text-zinc-100 mt-1">18.4%</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Dívida / PL</div>
+          <div id="val-divida" class="text-sm font-bold text-zinc-100 mt-1">0.45</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulador de Juros Compostos (Educação Financeira) -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Simulador Realista de Longo Prazo
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase text-zinc-400">Aporte Mensal (R$)</label>
+          <input type="number" id="input-aporte" value="500" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase text-zinc-400">Prazo (Anos)</label>
+          <input type="number" id="input-anos" value="10" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none">
+        </div>
+      </div>
+
+      <div class="p-4 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center">
+        <div>
+          <div class="text-xs text-zinc-400 font-bold">Total Acumulado Estimado:</div>
+          <div id="resultado-total" class="text-xl font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-zinc-500 font-bold">Total Investido do Bolso:</div>
+          <div id="resultado-bolso" class="text-sm font-semibold text-zinc-300 mt-0.5">R$ 0,00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nota de Transparência -->
+    <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
+      <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+      <span>Esta ferramenta destina-se exclusivamente a estudos estatísticos e educação financeira. O investimento em renda variável envolve riscos reais de mercado e rentabilidade passada não é garantia de lucro futuro.</span>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const dadosEmpresas = {
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", preco: "R$ 68,50", pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45" },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", preco: "R$ 38,20", pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52" },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", preco: "R$ 32,90", pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20" }
+    };
+
+    function selecionarAtivo(ticker) {
+      ['VALE3', 'PETR4', 'ITUB4'].forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (t === ticker) {
+          btn.className = "p-4 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-1";
+        } else {
+          btn.className = "p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1";
+        }
+      });
+
+      const info = dadosEmpresas[ticker];
+      document.getElementById('info-ticker').innerText = info.nome;
+      document.getElementById('info-setor').innerText = info.setor;
+      document.getElementById('info-preco').innerText = info.preco;
+      document.getElementById('val-pl').innerText = info.pl;
+      document.getElementById('val-dy').innerText = info.dy;
+      document.getElementById('val-roe').innerText = info.roe;
+      document.getElementById('val-divida').innerText = info.divida;
+    }
+
+    function calcularJuros() {
+      const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
+      const anos = Number(document.getElementById('input-anos').value) || 0;
+      const meses = anos * 12;
+      const taxaAnual = 0.10;
+      const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
+
+      let montante = 0;
+      for (let i = 0; i < meses; i++) {
+        montante = (montante + aporteMensal) * (1 + taxaMensal);
+      }
+
+      const totalBolso = aporteMensal * meses;
+
+      document.getElementById('resultado-total').innerText = montante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('resultado-bolso').innerText = totalBolso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    calcularJuros();
+  </script>
+</body>
+</html>
