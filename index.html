@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Estudos Financeiros & Valuation</title>
+  <title>Painel Master de Ativos & Projeção de Renda</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,13 +17,13 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master de Ativos</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro & Valuation</span>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro, Valuation & Renda</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, preço justo de Graham, volatilidade e comparação de cenários</p>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, preço justo de Graham, preço médio e fluxo de dividendos</p>
       </div>
     </div>
 
-    <!-- Seletor de Ativos (Expandido com mais setores) -->
+    <!-- Seletor de Ativos -->
     <div class="space-y-3">
       <label class="block text-xs font-bold uppercase text-zinc-400">Selecione uma Empresa para Analisar</label>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="container-ativos">
@@ -111,14 +111,43 @@
       </div>
     </div>
 
-    <!-- Simulador Avançado com Comparador de Cenários -->
+    <!-- Calculadora de Preço Médio -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+        <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i> Calculadora de Preço Médio
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. Atual de Ações</label>
+          <input type="number" id="calc- qtd-atual" value="100" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Médio Atual (R$)</label>
+          <input type="number" id="calc-pm-atual" value="70.00" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. a Comprar Agora</label>
+          <input type="number" id="calc- qtd-nova" value="50" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[11px] uppercase font-bold text-zinc-400">Novo Preço Cotação (R$)</label>
+          <input type="number" id="calc-preco-compra" value="68.50" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+        </div>
+      </div>
+      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+        <span class="text-zinc-400 font-bold">Novo Preço Médio Resultante:</span>
+        <span id="calc-resultado-pm" class="text-emerald-400 font-bold text-sm">R$ 0,00</span>
+      </div>
+    </div>
+
+    <!-- Simulador Avançado, Gráfico & Renda Passiva -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Simulador & Comparador de Cenários
+          <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Projeção & Renda Passiva
         </h2>
         <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
-          <option value="ativo">Taxa Estimada do Ativo (12% a.a.)</option>
+          <option value="ativo">Taxa Estimada do Ativo</option>
           <option value="cdi">Renda Fixa / CDI (10.5% a.a.)</option>
           <option value="conservador">IPCA + Juros Reais (7% a.a.)</option>
         </select>
@@ -140,22 +169,29 @@
         <canvas id="graficoTendencia"></canvas>
       </div>
 
-      <div class="p-4 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center">
-        <div>
-          <div class="text-xs text-zinc-400 font-bold">Total Acumulado Estimado:</div>
-          <div id="resultado-total" class="text-xl font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 font-bold uppercase">Patrimônio Acumulado:</div>
+          <div id="resultado-total" class="text-base font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Investido do bolso: <span id="resultado-bolso">R$ 0,00</span></div>
         </div>
-        <div class="text-right">
-          <div class="text-xs text-zinc-500 font-bold">Total Investido do Bolso:</div>
-          <div id="resultado-bolso" class="text-sm font-semibold text-zinc-300 mt-0.5">R$ 0,00</div>
+        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 font-bold uppercase">Renda Passiva Mensal Est.:</div>
+          <div id="resultado-renda" class="text-base font-bold text-amber-400 mt-0.5">R$ 0,00 /mês</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Baseado no Dividend Yield do ativo</div>
         </div>
       </div>
     </div>
 
+    <!-- Botão Copiar Resumo para o WhatsApp -->
+    <button onclick="copiarResumoWhatsApp()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
+      <i data-lucide="share-2" class="w-4 h-4"></i> Copiar Resumo para Enviar ao Colega
+    </button>
+
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta educacional avançada. O cálculo de Preço Justo utiliza a fórmula simplificada de Benjamin Graham baseada em Lucro e Patrimônio Líquido simulados. Renda variável envolve riscos.</span>
+      <span>Ferramenta educacional avançada para estudos de volatilidade, valuation e simulação patrimonial na B3.</span>
     </div>
 
   </div>
@@ -164,14 +200,16 @@
     lucide.createIcons();
 
     const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", graham: "R$ 82,10", volatilidade: 0.18, taxa: 0.12 },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", graham: "R$ 46,50", volatilidade: 0.24, taxa: 0.13 },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", graham: "R$ 35,00", volatilidade: 0.14, taxa: 0.11 },
-      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dy: "2.1% a.a.", roe: "26.5%", graham: "R$ 31,20", volatilidade: 0.16, taxa: 0.14 },
-      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dy: "9.5% a.a.", roe: "20.2%", graham: "R$ 34,80", volatilidade: 0.20, taxa: 0.12 }
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", graham: "R$ 82,10", volatilidade: 0.18, taxa: 0.12 },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", graham: "R$ 46,50", volatilidade: 0.24, taxa: 0.13 },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", graham: "R$ 35,00", volatilidade: 0.14, taxa: 0.11 },
+      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", graham: "R$ 31,20", volatilidade: 0.16, taxa: 0.14 },
+      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", graham: "R$ 34,80", volatilidade: 0.20, taxa: 0.12 }
     };
 
     let ativoAtual = 'VALE3';
+    let ultimoMontanteCalculado = 0;
+    let ultimaRendaCalculada = 0;
 
     function selecionarAtivo(ticker) {
       ativoAtual = ticker;
@@ -189,11 +227,13 @@
       document.getElementById('info-setor').innerText = info.setor;
       document.getElementById('info-preco').innerText = info.precoStr;
       document.getElementById('val-pl').innerText = info.pl;
-      document.getElementById('val-dy').innerText = info.dy;
+      document.getElementById('val-dy').innerText = info.dyStr;
       document.getElementById('val-roe').innerText = info.roe;
       document.getElementById('val-graham').innerText = info.graham;
 
-      // Status visual de preço Justo vs Preço Atual
+      document.getElementById('calc-preco-compra').value = info.precoBase;
+      document.getElementById('calc-pm-atual').value = (info.precoBase * 1.05).toFixed(2);
+
       const badge = document.getElementById('badge-status');
       if (info.precoBase < 35) {
         badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
@@ -204,6 +244,7 @@
       }
 
       atualizarEstatisticasPeriodo();
+      calcularPrecoMedio();
       calcularJuros();
     }
 
@@ -223,14 +264,28 @@
       document.getElementById('est-media').innerText = precoMedia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
+    function calcularPrecoMedio() {
+      const qtdAtual = Number(document.getElementById('calc- qtd-atual').value) || 0;
+      const pmAtual = Number(document.getElementById('calc-pm-atual').value) || 0;
+      const qtdNova = Number(document.getElementById('calc- qtd-nova').value) || 0;
+      const precoCompra = Number(document.getElementById('calc-preco-compra').value) || 0;
+
+      const totalAcoes = qtdAtual + qtdNova;
+      const custoTotal = (qtdAtual * pmAtual) + (qtdNova * precoCompra);
+      const novoPM = totalAcoes > 0 ? custoTotal / totalAcoes : 0;
+
+      document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
     let meuGrafico = null;
 
     function calcularJuros() {
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
       const anos = Number(document.getElementById('input-anos').value) || 0;
       const cenario = document.getElementById('select-cenario').value;
+      const info = dadosEmpresas[ativoAtual];
       
-      let taxaAnual = dadosEmpresas[ativoAtual].taxa;
+      let taxaAnual = info.taxa;
       if (cenario === 'cdi') taxaAnual = 0.105;
       if (cenario === 'conservador') taxaAnual = 0.07;
 
@@ -256,18 +311,20 @@
         }
       }
 
+      ultimoMontanteCalculado = montante;
+      const rendaMensal = (montante * info.dyNum) / 12;
+      ultimaRendaCalculada = rendaMensal;
+
       document.getElementById('resultado-total').innerText = montante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resultado-bolso').innerText = totalBolso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('resultado-renda').innerText = rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' /mês';
 
       atualizarGrafico(rotulos, dadosMontante, dadosBolso);
     }
 
     function atualizarGrafico(rotulos, montante, bolso) {
       const ctx = document.getElementById('graficoTendencia').getContext('2d');
-      
-      if (meuGrafico) {
-        meuGrafico.destroy();
-      }
+      if (meuGrafico) meuGrafico.destroy();
 
       meuGrafico = new Chart(ctx, {
         type: 'line',
@@ -296,15 +353,32 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              labels: { color: '#a1a1aa', font: { size: 10 } }
-            }
+            legend: { labels: { color: '#a1a1aa', font: { size: 10 } } }
           },
           scales: {
             x: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } },
             y: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } }
           }
         }
+      });
+    }
+
+    function copiarResumoWhatsApp() {
+      const info = dadosEmpresas[ativoAtual];
+      const anos = document.getElementById('input-anos').value;
+      const aporte = document.getElementById('input-aporte').value;
+      
+      const texto = `📊 *Estudo de Ativo - ${info.nome}* (${info.setor})\n` +
+                    `💰 Cotação Atual: ${info.precoStr}\n` +
+                    `📈 P/L: ${info.pl} | DY: ${info.dyStr} | ROE: ${info.roe}\n` +
+                    `🎯 Preço Justo (Graham): ${info.graham}\n\n` +
+                    `🚀 *Projeção de Longo Prazo (${anos} anos, Aportes de R$ ${aporte}/mês):*\n` +
+                    `• Patrimônio Estimado: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n` +
+                    `• Renda Passiva Estimada: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês\n\n` +
+                    `_Gerado via Painel Master de Ativos B3_`;
+
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
       });
     }
 
