@@ -26,9 +26,14 @@
         </div>
         <p class="text-xs text-zinc-400 mt-1">Valuation, diário de trades, stress test, alocação e gráficos profissionais</p>
       </div>
-      <button onclick="fazerLogout()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-rose-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
-        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
-      </button>
+      <div class="flex items-center gap-2">
+        <button onclick="forcarAtualizacaoManual()" title="Atualizar Cotações Agora" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="icone-refresh"></i> Atualizar
+        </button>
+        <button onclick="fazerLogout()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-rose-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
+        </button>
+      </div>
     </div>
 
     <!-- Seletor de Ativos -->
@@ -102,7 +107,7 @@
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
           <h2 class="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider">Gráfico de Cotação em Tempo Real</h2>
         </div>
-        <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-emerald-400 rounded">LIVE FEED</span>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-emerald-400 rounded">AUTO-SYNC (30s)</span>
       </div>
       <div class="w-full h-72 bg-zinc-950 p-2 rounded-xl border border-zinc-900 flex items-center justify-center">
         <canvas id="graficoTrading"></canvas>
@@ -312,7 +317,7 @@
       window.location.href = "login.html";
     }
 
-    async function selecionarAtivo(ticker) {
+    async function selecionarAtivo(ticker, silencioso = false) {
       ativoAtual = ticker;
       ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'BBAS3', 'BTC'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
@@ -343,9 +348,11 @@
         document.getElementById('info-preco').innerText = info.precoStr;
       }
 
-      document.getElementById('trade-entrada').value = info.precoBase.toFixed(2);
-      document.getElementById('trade-stop').value = (info.precoBase * 0.98).toFixed(2);
-      document.getElementById('calc-preco-compra').value = info.precoBase;
+      if (!silencioso) {
+        document.getElementById('trade-entrada').value = info.precoBase.toFixed(2);
+        document.getElementById('trade-stop').value = (info.precoBase * 0.98).toFixed(2);
+        document.getElementById('calc-preco-compra').value = info.precoBase;
+      }
 
       renderizarGraficoTrading(info.precoBase, info.volatilidade);
       calcularTrade();
@@ -354,6 +361,19 @@
       calcularPrecoMedio();
       calcularJuros();
     }
+
+    // Botão de Atualização Manual com animação
+    async function forcarAtualizacaoManual() {
+      const icone = document.getElementById('icone-refresh');
+      icone.classList.add('animate-spin');
+      await selecionarAtivo(ativoAtual, true);
+      setTimeout(() => icone.classList.remove('animate-spin'), 800);
+    }
+
+    // Atualização Automática a cada 30 segundos em segundo plano
+    setInterval(() => {
+      selecionarAtivo(ativoAtual, true);
+    }, 30000);
 
     function renderizarGraficoTrading(preco, vol) {
       const ctx = document.getElementById('graficoTrading').getContext('2d');
