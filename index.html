@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Estudos Financeiros & Volatilidade</title>
+  <title>Painel de Estudos Financeiros & Valuation</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,33 +16,41 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Faixas</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Estatísticas & Histórico</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master de Ativos</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro & Valuation</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, máximas, mínimas, médias e projeção gráfica</p>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, preço justo de Graham, volatilidade e comparação de cenários</p>
       </div>
     </div>
 
-    <!-- Seletor de Ativos / Empresas Reais -->
+    <!-- Seletor de Ativos (Expandido com mais setores) -->
     <div class="space-y-3">
       <label class="block text-xs font-bold uppercase text-zinc-400">Selecione uma Empresa para Analisar</label>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="container-ativos">
-        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-4 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-1">
-          <div class="font-bold text-sm text-zinc-100">VALE3</div>
-          <div class="text-[11px] text-zinc-400">Mineração & Metais</div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="container-ativos">
+        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5">
+          <div class="font-bold text-xs text-zinc-100">VALE3</div>
+          <div class="text-[10px] text-zinc-400">Mineração</div>
         </button>
-        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1">
-          <div class="font-bold text-sm text-zinc-100">PETR4</div>
-          <div class="text-[11px] text-zinc-400">Energia & Petróleo</div>
+        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+          <div class="font-bold text-xs text-zinc-100">PETR4</div>
+          <div class="text-[10px] text-zinc-400">Energia</div>
         </button>
-        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1">
-          <div class="font-bold text-sm text-zinc-100">ITUB4</div>
-          <div class="text-[11px] text-zinc-400">Setor Financeiro</div>
+        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+          <div class="font-bold text-xs text-zinc-100">ITUB4</div>
+          <div class="text-[10px] text-zinc-400">Financeiro</div>
+        </button>
+        <button onclick="selecionarAtivo('WEGE3')" id="btn-WEGE3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+          <div class="font-bold text-xs text-zinc-100">WEGE3</div>
+          <div class="text-[10px] text-zinc-400">Industrial</div>
+        </button>
+        <button onclick="selecionarAtivo('BBAS3')" id="btn-BBAS3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+          <div class="font-bold text-xs text-zinc-100">BBAS3</div>
+          <div class="text-[10px] text-zinc-400">Bancos</div>
         </button>
       </div>
     </div>
 
-    <!-- Detalhes Fundamentais do Ativo Selecionado -->
+    <!-- Detalhes Fundamentais & Preço Justo de Graham -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex justify-between items-center border-b border-zinc-800/80 pb-3">
         <div>
@@ -51,13 +59,13 @@
         </div>
         <div class="text-right">
           <div id="info-preco" class="text-lg font-bold text-zinc-100">R$ 68,50</div>
-          <div class="text-[10px] text-zinc-500">Cotação de Referência</div>
+          <div id="badge-status" class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Descontado</div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">P/L (Preço/Lucro)</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">P/L</div>
           <div id="val-pl" class="text-sm font-bold text-zinc-100 mt-1">6.2x</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
@@ -65,24 +73,24 @@
           <div id="val-dy" class="text-sm font-bold text-emerald-400 mt-1">8.5% a.a.</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">ROE (Retorno)</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">ROE</div>
           <div id="val-roe" class="text-sm font-bold text-zinc-100 mt-1">18.4%</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Dívida / PL</div>
-          <div id="val-divida" class="text-sm font-bold text-zinc-100 mt-1">0.45</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço Justo (Graham)</div>
+          <div id="val-graham" class="text-sm font-bold text-amber-400 mt-1">R$ 82,10</div>
         </div>
       </div>
     </div>
 
-    <!-- Novo Módulo: Análise de Preços por Período (Mín, Máx e Média) -->
+    <!-- Estatísticas por Período & Volatilidade -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i> Estatísticas por Período
+          <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Volatilidade & Faixas (Dias)
         </h2>
         <div class="flex items-center gap-2 w-full sm:w-auto">
-          <label class="text-[11px] uppercase font-bold text-zinc-400">Dias (1-365):</label>
+          <label class="text-[11px] uppercase font-bold text-zinc-400">Período (1-365):</label>
           <input type="number" id="input-dias" value="90" min="1" max="365" oninput="atualizarEstatisticasPeriodo()" class="w-20 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-100 text-center focus:outline-none">
         </div>
       </div>
@@ -103,11 +111,18 @@
       </div>
     </div>
 
-    <!-- Simulador de Juros Compostos com Gráfico de Tendência -->
+    <!-- Simulador Avançado com Comparador de Cenários -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Gráfico de Tendência & Projeção
-      </h2>
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+          <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Simulador & Comparador de Cenários
+        </h2>
+        <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
+          <option value="ativo">Taxa Estimada do Ativo (12% a.a.)</option>
+          <option value="cdi">Renda Fixa / CDI (10.5% a.a.)</option>
+          <option value="conservador">IPCA + Juros Reais (7% a.a.)</option>
+        </select>
+      </div>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="space-y-1">
@@ -120,7 +135,7 @@
         </div>
       </div>
 
-      <!-- Canvas do Gráfico de Tendência -->
+      <!-- Canvas do Gráfico -->
       <div class="w-full h-64 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
         <canvas id="graficoTendencia"></canvas>
       </div>
@@ -140,7 +155,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta estatística educacional baseada em simulação paramétrica de ativos da B3. Os dados de mínimo, máximo e média ajustam-se com base na volatilidade histórica do período selecionado.</span>
+      <span>Ferramenta educacional avançada. O cálculo de Preço Justo utiliza a fórmula simplificada de Benjamin Graham baseada em Lucro e Patrimônio Líquido simulados. Renda variável envolve riscos.</span>
     </div>
 
   </div>
@@ -149,30 +164,23 @@
     lucide.createIcons();
 
     const dadosEmpresas = {
-      VALE3: { 
-        nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", 
-        pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45", volatilidade: 0.18
-      },
-      PETR4: { 
-        nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", 
-        pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52", volatilidade: 0.24
-      },
-      ITUB4: { 
-        nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", 
-        pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20", volatilidade: 0.14
-      }
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", graham: "R$ 82,10", volatilidade: 0.18, taxa: 0.12 },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", graham: "R$ 46,50", volatilidade: 0.24, taxa: 0.13 },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", graham: "R$ 35,00", volatilidade: 0.14, taxa: 0.11 },
+      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dy: "2.1% a.a.", roe: "26.5%", graham: "R$ 31,20", volatilidade: 0.16, taxa: 0.14 },
+      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dy: "9.5% a.a.", roe: "20.2%", graham: "R$ 34,80", volatilidade: 0.20, taxa: 0.12 }
     };
 
     let ativoAtual = 'VALE3';
 
     function selecionarAtivo(ticker) {
       ativoAtual = ticker;
-      ['VALE3', 'PETR4', 'ITUB4'].forEach(t => {
+      ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'BBAS3'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if (t === ticker) {
-          btn.className = "p-4 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-1";
+          btn.className = "p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5";
         } else {
-          btn.className = "p-4 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-1";
+          btn.className = "p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5";
         }
       });
 
@@ -183,22 +191,32 @@
       document.getElementById('val-pl').innerText = info.pl;
       document.getElementById('val-dy').innerText = info.dy;
       document.getElementById('val-roe').innerText = info.roe;
-      document.getElementById('val-divida').innerText = info.divida;
+      document.getElementById('val-graham').innerText = info.graham;
+
+      // Status visual de preço Justo vs Preço Atual
+      const badge = document.getElementById('badge-status');
+      if (info.precoBase < 35) {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+        badge.innerText = "Descontado (Oportunidade)";
+      } else {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
+        badge.innerText = "Preço Justo / Equilibrado";
+      }
 
       atualizarEstatisticasPeriodo();
+      calcularJuros();
     }
 
     function atualizarEstatisticasPeriodo() {
       const dias = Number(document.getElementById('input-dias').value) || 90;
       const info = dadosEmpresas[ativoAtual];
       
-      // Simulação estatística realista do impacto do prazo na amplitude de preços
       const fatorAmplitude = Math.min(Math.max(dias / 365, 0.1), 1);
       const desvio = info.precoBase * info.volatilidade * Math.sqrt(fatorAmplitude);
 
       const precoMin = info.precoBase - desvio * 1.2;
       const precoMax = info.precoBase + desvio * 1.1;
-      const precoMedia = (precoMin + precoMax) / 2 + (info.precoBase - (precoMin + precoMax) / 2) * 0.3;
+      const precoMedia = (precoMin + precoMax) / 2;
 
       document.getElementById('est-min').innerText = precoMin.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('est-max').innerText = precoMax.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -210,7 +228,12 @@
     function calcularJuros() {
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
       const anos = Number(document.getElementById('input-anos').value) || 0;
-      const taxaAnual = 0.10;
+      const cenario = document.getElementById('select-cenario').value;
+      
+      let taxaAnual = dadosEmpresas[ativoAtual].taxa;
+      if (cenario === 'cdi') taxaAnual = 0.105;
+      if (cenario === 'conservador') taxaAnual = 0.07;
+
       const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
 
       let rotulos = [];
@@ -285,7 +308,6 @@
       });
     }
 
-    calcularJuros();
     selecionarAtivo('VALE3');
   </script>
 </body>
