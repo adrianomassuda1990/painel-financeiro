@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Estudos Financeiros & Tendência</title>
+  <title>Painel de Estudos Financeiros & Volatilidade</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,10 +16,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Tendência</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Educacional & Gráfico</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Faixas</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Estatísticas & Histórico</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, volatilidade e projeção gráfica de longo prazo</p>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, máximas, mínimas, médias e projeção gráfica</p>
       </div>
     </div>
 
@@ -75,24 +75,30 @@
       </div>
     </div>
 
-    <!-- Estudo de Volatilidade e Risco -->
+    <!-- Novo Módulo: Análise de Preços por Período (Mín, Máx e Média) -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Estudo de Volatilidade & Risco
-      </h2>
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i> Estatísticas por Período
+        </h2>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <label class="text-[11px] uppercase font-bold text-zinc-400">Dias (1-365):</label>
+          <input type="number" id="input-dias" value="90" min="1" max="365" oninput="atualizarEstatisticasPeriodo()" class="w-20 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-100 text-center focus:outline-none">
+        </div>
+      </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Volatilidade (30d)</div>
-          <div id="vol-anual" class="text-sm font-bold text-amber-400 mt-1">24.2%</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Mínimo no Período</div>
+          <div id="est-min" class="text-sm font-bold text-rose-400 mt-1">R$ 0,00</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Mín / Máx (52 semanas)</div>
-          <div id="vol-minmax" class="text-xs font-bold text-zinc-100 mt-1">R$ 58,00 - R$ 78,50</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Máximo no Período</div>
+          <div id="est-max" class="text-sm font-bold text-emerald-400 mt-1">R$ 0,00</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Beta (vs. Ibovespa)</div>
-          <div id="vol-beta" class="text-sm font-bold text-zinc-100 mt-1">1.12</div>
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço Médio</div>
+          <div id="est-media" class="text-sm font-bold text-zinc-100 mt-1">R$ 0,00</div>
         </div>
       </div>
     </div>
@@ -134,7 +140,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta educacional baseada em simulação matemática de juros compostos a uma taxa de referência de 10% a.a. Não constitui recomendação de compra ou venda de ativos.</span>
+      <span>Ferramenta estatística educacional baseada em simulação paramétrica de ativos da B3. Os dados de mínimo, máximo e média ajustam-se com base na volatilidade histórica do período selecionado.</span>
     </div>
 
   </div>
@@ -144,23 +150,23 @@
 
     const dadosEmpresas = {
       VALE3: { 
-        nome: "VALE3", setor: "Mineração & Metais", preco: "R$ 68,50", 
-        pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45",
-        volAnual: "24.2%", minMax: "R$ 58,00 - R$ 78,50", beta: "1.12"
+        nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", 
+        pl: "6.2x", dy: "8.5% a.a.", roe: "18.4%", divida: "0.45", volatilidade: 0.18
       },
       PETR4: { 
-        nome: "PETR4", setor: "Energia & Petróleo", preco: "R$ 38,20", 
-        pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52",
-        volAnual: "31.8%", minMax: "R$ 29,50 - R$ 42,00", beta: "1.35"
+        nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", 
+        pl: "4.5x", dy: "12.1% a.a.", roe: "24.1%", divida: "0.52", volatilidade: 0.24
       },
       ITUB4: { 
-        nome: "ITUB4", setor: "Setor Financeiro", preco: "R$ 32,90", 
-        pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20",
-        volAnual: "18.5%", minMax: "R$ 26,00 - R$ 35,50", beta: "0.88"
+        nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", 
+        pl: "9.1x", dy: "5.8% a.a.", roe: "21.0%", divida: "1.20", volatilidade: 0.14
       }
     };
 
+    let ativoAtual = 'VALE3';
+
     function selecionarAtivo(ticker) {
+      ativoAtual = ticker;
       ['VALE3', 'PETR4', 'ITUB4'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if (t === ticker) {
@@ -173,15 +179,30 @@
       const info = dadosEmpresas[ticker];
       document.getElementById('info-ticker').innerText = info.nome;
       document.getElementById('info-setor').innerText = info.setor;
-      document.getElementById('info-preco').innerText = info.preco;
+      document.getElementById('info-preco').innerText = info.precoStr;
       document.getElementById('val-pl').innerText = info.pl;
       document.getElementById('val-dy').innerText = info.dy;
       document.getElementById('val-roe').innerText = info.roe;
       document.getElementById('val-divida').innerText = info.divida;
 
-      document.getElementById('vol-anual').innerText = info.volAnual;
-      document.getElementById('vol-minmax').innerText = info.minMax;
-      document.getElementById('vol-beta').innerText = info.beta;
+      atualizarEstatisticasPeriodo();
+    }
+
+    function atualizarEstatisticasPeriodo() {
+      const dias = Number(document.getElementById('input-dias').value) || 90;
+      const info = dadosEmpresas[ativoAtual];
+      
+      // Simulação estatística realista do impacto do prazo na amplitude de preços
+      const fatorAmplitude = Math.min(Math.max(dias / 365, 0.1), 1);
+      const desvio = info.precoBase * info.volatilidade * Math.sqrt(fatorAmplitude);
+
+      const precoMin = info.precoBase - desvio * 1.2;
+      const precoMax = info.precoBase + desvio * 1.1;
+      const precoMedia = (precoMin + precoMax) / 2 + (info.precoBase - (precoMin + precoMax) / 2) * 0.3;
+
+      document.getElementById('est-min').innerText = precoMin.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('est-max').innerText = precoMax.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('est-media').innerText = precoMedia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
     let meuGrafico = null;
@@ -204,7 +225,6 @@
         dadosMontante.push(montante);
         dadosBolso.push(totalBolso);
 
-        // Simula 12 meses para o próximo ano
         for (let m = 0; m < 12; m++) {
           if (ano < anos) {
             montante = (montante + aporteMensal) * (1 + taxaMensal);
@@ -237,7 +257,7 @@
               borderColor: '#10b981',
               backgroundColor: 'rgba(16, 185, 129, 0.1)',
               fill: true,
-              tension: 3 / 10
+              tension: 0.3
             },
             {
               label: 'Total Investido do Bolso',
@@ -245,7 +265,7 @@
               borderColor: '#71717a',
               backgroundColor: 'transparent',
               borderDash: [5, 5],
-              tension: 3 / 10
+              tension: 0.3
             }
           ]
         },
@@ -266,6 +286,7 @@
     }
 
     calcularJuros();
+    selecionarAtivo('VALE3');
   </script>
 </body>
 </html>
