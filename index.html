@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <!-- NOVO: Módulo de Rebalanceamento de Carteira (Asset Allocation) -->
+    <!-- Módulo de Rebalanceamento de Carteira (Asset Allocation) -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
         <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Rebalanceamento Inteligente (Asset Allocation)
@@ -272,13 +272,16 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta avançada com rebalanceamento de carteira e simulações profissionais para a B3 e Criptoativos.</span>
+      <span>Ferramenta avançada ligada em tempo real à API Python no Render.</span>
     </div>
 
   </div>
 
   <script>
     lucide.createIcons();
+
+    // URL da API em Python hospedada no Render
+    const API_URL = "https://painel-financeiro-api-f1cl.onrender.com/api/cotacao";
 
     const dadosEmpresas = {
       VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", labelRef: "Preço Justo (Graham)", volatilidade: 0.18, taxa: 0.12, tipo: "acao" },
@@ -293,7 +296,7 @@
     let ultimoMontanteCalculado = 0;
     let ultimaRendaCalculada = 0;
 
-    function selecionarAtivo(ticker) {
+    async function selecionarAtivo(ticker) {
       ativoAtual = ticker;
       ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'BBAS3', 'BTC'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
@@ -307,19 +310,36 @@
       const info = dadosEmpresas[ticker];
       document.getElementById('info-ticker').innerText = info.nome;
       document.getElementById('info-setor').innerText = info.setor;
-      document.getElementById('info-preco').innerText = info.precoStr;
       
       document.getElementById('label-ind-1').innerText = info.tipo === 'cripto' ? 'Rede / Oferta' : 'P/L';
       document.getElementById('val-pl').innerText = info.pl;
-
       document.getElementById('label-ind-2').innerText = info.tipo === 'cripto' ? 'Estratégia' : 'Dividend Yield';
       document.getElementById('val-dy').innerText = info.dyStr;
-
       document.getElementById('label-ind-3').innerText = info.tipo === 'cripto' ? 'Ciclo Halving' : 'ROE';
       document.getElementById('val-roe').innerText = info.roe;
-
       document.getElementById('label-ind-4').innerText = info.tipo === 'cripto' ? 'Classe' : 'Preço Justo (Graham)';
       document.getElementById('val-graham').innerText = info.refVal;
+
+      // Buscar dados reais da API Python no Render
+      try {
+        const resposta = await fetch(`${API_URL}/${ticker}`);
+        if (resposta.ok) {
+          const dadosAPI = await resposta.json();
+          info.precoBase = dadosAPI.preco_atual;
+          info.precoStr = `R$ ${dadosAPI.preco_atual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+          
+          document.getElementById('info-preco').innerText = info.precoStr;
+          document.getElementById('est-min').innerText = `R$ ${dadosAPI.min_periodo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('est-max').innerText = `R$ ${dadosAPI.max_periodo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('est-media').innerText = `R$ ${dadosAPI.preco_medio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        } else {
+          throw new Error("Erro na resposta da API");
+        }
+      } catch (e) {
+        console.warn("Usando dados locais de contingência:", e);
+        document.getElementById('info-preco').innerText = info.precoStr;
+        atualizarEstatisticasPeriodoLocal();
+      }
 
       document.getElementById('calc-preco-compra').value = info.precoBase;
       document.getElementById('calc-pm-atual').value = (info.precoBase * 1.05).toFixed(2);
@@ -328,28 +348,22 @@
       if (info.tipo === 'cripto') {
         badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
         badge.innerText = "Ativo Digital Descentralizado";
-      } else if (info.precoBase < 35) {
-        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
-        badge.innerText = "Descontado (Oportunidade)";
       } else {
-        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
-        badge.innerText = "Preço Justo / Equilibrado";
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+        badge.innerText = "Cotação Real (API)";
       }
 
-      atualizarEstatisticasPeriodo();
       calcularStressTest();
       calcularPrecoMedio();
       calcularRebalanceamento();
       calcularJuros();
     }
 
-    function atualizarEstatisticasPeriodo() {
+    function atualizarEstatisticasPeriodoLocal() {
       const dias = Number(document.getElementById('input-dias').value) || 90;
       const info = dadosEmpresas[ativoAtual];
-      
       const fatorAmplitude = Math.min(Math.max(dias / 365, 0.1), 1);
       const desvio = info.precoBase * info.volatilidade * Math.sqrt(fatorAmplitude);
-
       const precoMin = info.precoBase - desvio * 1.2;
       const precoMax = info.precoBase + desvio * 1.1;
       const precoMedia = (precoMin + precoMax) / 2;
@@ -359,14 +373,16 @@
       document.getElementById('est-media').innerText = precoMedia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
     }
 
+    function atualizarEstatisticasPeriodo() {
+      atualizarEstatisticasPeriodoLocal();
+    }
+
     function calcularStressTest() {
       const info = dadosEmpresas[ativoAtual];
       const percentualQueda = Number(document.getElementById('select-crise').value) || 0;
       const precoStress = info.precoBase * (1 - percentualQueda);
-      
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
       const unidadesAdicionais = precoStress > 0 ? (aporteMensal / precoStress).toFixed(info.tipo === 'cripto' ? 4 : 0) : 0;
-      
       let valorRetorno = info.tipo === 'cripto' ? `${unidadesAdicionais} fração` : `${((info.dyNum / (1 - percentualQueda))*100).toFixed(1)}% a.a.`;
 
       document.getElementById('stress-preco').innerText = precoStress.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
@@ -379,7 +395,6 @@
       const pmAtual = Number(document.getElementById('calc-pm-atual').value) || 0;
       const qtdNova = Number(document.getElementById('calc-qtd-nova').value) || 0;
       const precoCompra = Number(document.getElementById('calc-preco-compra').value) || 0;
-
       const totalAcoes = qtdAtual + qtdNova;
       const custoTotal = (qtdAtual * pmAtual) + (qtdNova * precoCompra);
       const novoPM = totalAcoes > 0 ? custoTotal / totalAcoes : 0;
@@ -391,7 +406,6 @@
       const pAcoes = Number(document.getElementById('aloc-acoes').value) || 0;
       const pFiis = Number(document.getElementById('aloc-fiis').value) || 0;
       const pCripto = Number(document.getElementById('aloc-cripto').value) || 0;
-
       const valAcoes = 30000;
       const valFiis = 12500;
       const valCripto = 7500;
@@ -405,7 +419,6 @@
       document.getElementById('patrimonio-fiis').innerText = `${valFiis.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realFiis.toFixed(1)}%)`;
       document.getElementById('patrimonio-cripto').innerText = `${valCripto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realCripto.toFixed(1)}%)`;
 
-      // Definir desvio máximo para sugerir aporte
       let desvioAcoes = pAcoes - realAcoes;
       let desvioFiis = pFiis - realFiis;
       let desvioCripto = pCripto - realCripto;
@@ -437,7 +450,6 @@
       let rotulos = [];
       let dadosPrincipal = [];
       let dadosSecundario = [];
-
       let montante = 0;
       let montanteCDI = 0;
       let totalBolso = 0;
@@ -519,14 +531,14 @@
       const aporte = document.getElementById('input-aporte').value;
       
       const texto = `📊 *Painel Allocation Pro - ${info.nome}* (${info.setor})\n` +
-                    `💰 Cotação Ref: ${info.precoStr}\n\n` +
+                    `💰 Cotação Real: ${info.precoStr}\n\n` +
                     `🚀 *Simulação Dinâmica (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
                     `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}\n` +
                     `• Retorno Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}/mês\n\n` +
                     `_Gerado via Painel Master Allocation_`;
 
       navigator.clipboard.writeText(texto).then(() => {
-        alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
+        alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp.");
       });
     }
 
