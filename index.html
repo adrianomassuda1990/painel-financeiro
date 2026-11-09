@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Valuation, Renda & Meta de Liberdade</title>
+  <title>Painel Master Pro - Valuation, Stress Test & Meta</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,10 +16,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Pro</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Plataforma de Investimentos</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Pro +</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Inovação & Stress Test</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, preço médio, dividendos e meta de independência</p>
+        <p class="text-xs text-zinc-400 mt-1">Valuation, faixa de volatilidade, preço médio, dividendos e testes de resistência em crise</p>
       </div>
     </div>
 
@@ -83,6 +83,37 @@
       </div>
     </div>
 
+    <!-- DIFERENCIAL: Módulo de Stress Test & Aporte Oportunista (Crise) -->
+    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> Stress Test & Oportunidade de Crise
+        </h2>
+        <select id="select-crise" onchange="calcularStressTest()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-amber-400 font-bold focus:outline-none">
+          <option value="0">Cenário Normal (Preço Atual)</option>
+          <option value="0.15">Correção Leve (-15%)</option>
+          <option value="0.30">Crise Forte / Bear Market (-30%)</option>
+          <option value="0.45">Pânico de Mercado (-45%)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço em Stress</div>
+          <div id="stress-preco" class="text-sm font-bold text-amber-400 mt-1">R$ 0,00</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Ações a mais com o Aporte</div>
+          <div id="stress-qtd" class="text-sm font-bold text-emerald-400 mt-1">0 açs</div>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold">Novo DY na Queda</div>
+          <div id="stress-dy" class="text-sm font-bold text-zinc-100 mt-1">0% a.a.</div>
+        </div>
+      </div>
+      <p class="text-[11px] text-zinc-500 italic">* Simula o ganho de assimetria ao comprar ativos descontados durante quedas bruscas de mercado.</p>
+    </div>
+
     <!-- Estatísticas por Período & Volatilidade -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -111,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Nova Ferramenta: Calculadora de Meta de Viver de Renda -->
+    <!-- Meta de Independência Financeira -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
         <i data-lucide="target" class="w-4 h-4 text-emerald-400"></i> Meta de Independência Financeira
@@ -140,7 +171,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="space-y-1">
           <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. Atual de Ações</label>
-          <input type="number" id="calc- qtd-atual" value="100" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+          <input type="number" id="calc-qtd-atual" value="100" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
         </div>
         <div class="space-y-1">
           <label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Médio Atual (R$)</label>
@@ -148,7 +179,7 @@
         </div>
         <div class="space-y-1">
           <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. a Comprar Agora</label>
-          <input type="number" id="calc- qtd-nova" value="50" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
+          <input type="number" id="calc-qtd-nova" value="50" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
         </div>
         <div class="space-y-1">
           <label class="block text-[11px] uppercase font-bold text-zinc-400">Novo Preço Cotação (R$)</label>
@@ -212,7 +243,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Plataforma profissional de estudos fundamentalistas, volatilidade e simulação de independência financeira na B3.</span>
+      <span>Plataforma profissional com módulo exclusivo de Stress Test e simulação patrimonial na B3.</span>
     </div>
 
   </div>
@@ -265,6 +296,7 @@
       }
 
       atualizarEstatisticasPeriodo();
+      calcularStressTest();
       calcularPrecoMedio();
       calcularJuros();
     }
@@ -285,10 +317,24 @@
       document.getElementById('est-media').innerText = precoMedia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
+    function calcularStressTest() {
+      const info = dadosEmpresas[ativoAtual];
+      const percentualQueda = Number(document.getElementById('select-crise').value) || 0;
+      const precoStress = info.precoBase * (1 - percentualQueda);
+      
+      const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
+      const acoesAdicionais = precoStress > 0 ? Math.floor(aporteMensal / precoStress) : 0;
+      const dyStress = percentualQueda > 0 ? (info.dyNum / (1 - percentualQueda)) * 100 : (info.dyNum * 100);
+
+      document.getElementById('stress-preco').innerText = precoStress.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('stress-qtd').innerText = `${acoesAdicionais} açs`;
+      document.getElementById('stress-dy').innerText = `${dyStress.toFixed(1)}% a.a.`;
+    }
+
     function calcularPrecoMedio() {
-      const qtdAtual = Number(document.getElementById('calc- qtd-atual').value) || 0;
+      const qtdAtual = Number(document.getElementById('calc-qtd-atual').value) || 0;
       const pmAtual = Number(document.getElementById('calc-pm-atual').value) || 0;
-      const qtdNova = Number(document.getElementById('calc- qtd-nova').value) || 0;
+      const qtdNova = Number(document.getElementById('calc-qtd-nova').value) || 0;
       const precoCompra = Number(document.getElementById('calc-preco-compra').value) || 0;
 
       const totalAcoes = qtdAtual + qtdNova;
@@ -302,13 +348,11 @@
       const rendaDesejada = Number(document.getElementById('meta-renda-desejada').value) || 0;
       const info = dadosEmpresas[ativoAtual];
       
-      // Patrimônio necessário = (Renda Anual Desejada) / (Dividend Yield)
       const rendaAnual = rendaDesejada * 12;
       const patrimonioNecessario = info.dyNum > 0 ? rendaAnual / info.dyNum : 0;
 
       document.getElementById('meta-patrimonio-necessario').innerText = patrimonioNecessario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-      // Estimar tempo com base no aporte atual e taxa do ativo
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
       const cenario = document.getElementById('select-cenario').value;
       let taxaAnual = info.taxa;
@@ -318,7 +362,7 @@
 
       let montante = 0;
       let meses = 0;
-      while (montante < patrimonioNecessario && meses < 1200) { // teto de 100 anos
+      while (montante < patrimonioNecessario && meses < 1200) {
         montante = (montante + aporteMensal) * (1 + taxaMensal);
         meses++;
       }
@@ -371,6 +415,7 @@
 
       atualizarGrafico(rotulos, dadosMontante, dadosBolso);
       calcularMetaIndependencia();
+      calcularStressTest();
     }
 
     function atualizarGrafico(rotulos, montante, bolso) {
@@ -420,7 +465,7 @@
       const aporte = document.getElementById('input-aporte').value;
       const metaRenda = document.getElementById('meta-renda-desejada').value;
       
-      const texto = `📊 *Painel Pro - ${info.nome}* (${info.setor})\n` +
+      const texto = `📊 *Painel Pro + - ${info.nome}* (${info.setor})\n` +
                     `💰 Cotação Atual: ${info.precoStr}\n` +
                     `📈 P/L: ${info.pl} | DY: ${info.dyStr} | ROE: ${info.roe}\n` +
                     `🎯 Preço Justo (Graham): ${info.graham}\n\n` +
@@ -428,7 +473,7 @@
                     `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n` +
                     `• Renda Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês\n` +
                     `🎯 Meta de R$ ${metaRenda}/mês: ${document.getElementById('meta-tempo-estimado').innerText}\n\n` +
-                    `_Gerado via Painel Master Pro B3_`;
+                    `_Ferramenta Master com Stress Test de Mercado_`;
 
       navigator.clipboard.writeText(texto).then(() => {
         alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp do teu colega.");
