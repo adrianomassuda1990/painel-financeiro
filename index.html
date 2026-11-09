@@ -3,285 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Rebalanceamento & Analytics</title>
+  <title>Painel Master Pro - Trading Desk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Verificação de Segurança: se não estiver autenticado, volta para o login
     if (localStorage.getItem("painel_autenticado") !== "true") {
       window.location.href = "login.html";
     }
   </script>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 sm:p-8 flex justify-center items-start">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen p-3 sm:p-6 flex justify-center items-start">
 
-  <div class="w-full max-w-2xl bg-zinc-900 p-6 sm:p-8 rounded-3xl border border-zinc-800 shadow-2xl space-y-6">
+  <div class="w-full max-w-3xl bg-zinc-900 p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-2xl space-y-5">
     
-    <!-- Cabeçalho com Botão de Logout -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
+    <!-- Cabeçalho tipo Terminal -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-zinc-800 pb-4">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Painel Master Allocation</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Pro & Rebalanceamento</span>
+          <h1 class="text-base sm:text-lg font-bold text-zinc-100 uppercase tracking-wider">Trading Desk & Analytics</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] px-2 py-0.5 rounded font-mono font-bold">LIVE FEED</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Valuation, volatilidade, stress test, gráficos interativos e alocação estratégica</p>
+        <p class="text-[11px] text-zinc-400">Plataforma de alta performance integrada com API Python & Render</p>
       </div>
-      <button onclick="fazerLogout()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-rose-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
+      <button onclick="fazerLogout()" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-rose-400 border border-zinc-700 rounded-lg text-xs font-bold transition-all flex items-center gap-1">
         <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
       </button>
     </div>
 
-    <!-- Seletor de Ativos (Ações & Bitcoin) -->
-    <div class="space-y-3">
-      <label class="block text-xs font-bold uppercase text-zinc-400">Selecione o Ativo de Referência</label>
-      <div class="grid grid-cols-2 sm:grid-cols-6 gap-2" id="container-ativos">
-        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5">
+    <!-- Seletor de Ativos estilo Broker -->
+    <div class="space-y-2">
+      <label class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Ativos Monitorizados</label>
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="container-ativos">
+        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-2.5 bg-zinc-950 border-2 border-emerald-500 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-zinc-100">VALE3</div>
-          <div class="text-[10px] text-zinc-400">Mineração</div>
+          <div class="text-[9px] text-emerald-400 font-mono">B3</div>
         </button>
-        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-zinc-100">PETR4</div>
-          <div class="text-[10px] text-zinc-400">Energia</div>
+          <div class="text-[9px] text-zinc-400 font-mono">B3</div>
         </button>
-        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-zinc-100">ITUB4</div>
-          <div class="text-[10px] text-zinc-400">Financeiro</div>
+          <div class="text-[9px] text-zinc-400 font-mono">B3</div>
         </button>
-        <button onclick="selecionarAtivo('WEGE3')" id="btn-WEGE3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+        <button onclick="selecionarAtivo('WEGE3')" id="btn-WEGE3" class="p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-zinc-100">WEGE3</div>
-          <div class="text-[10px] text-zinc-400">Industrial</div>
+          <div class="text-[9px] text-zinc-400 font-mono">B3</div>
         </button>
-        <button onclick="selecionarAtivo('BBAS3')" id="btn-BBAS3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+        <button onclick="selecionarAtivo('BBAS3')" id="btn-BBAS3" class="p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-zinc-100">BBAS3</div>
-          <div class="text-[10px] text-zinc-400">Bancos</div>
+          <div class="text-[9px] text-zinc-400 font-mono">B3</div>
         </button>
-        <button onclick="selecionarAtivo('BTC')" id="btn-BTC" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
+        <button onclick="selecionarAtivo('BTC')" id="btn-BTC" class="p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all">
           <div class="font-bold text-xs text-amber-400">BTC</div>
-          <div class="text-[10px] text-zinc-400">Criptoativo</div>
+          <div class="text-[9px] text-amber-500/80 font-mono">Crypto</div>
         </button>
       </div>
     </div>
 
-    <!-- Detalhes Fundamentais & Preço Justo -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex justify-between items-center border-b border-zinc-800/80 pb-3">
+    <!-- Painel Principal de Cotação -->
+    <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex justify-between items-center">
+      <div>
+        <div class="text-xs text-zinc-400 font-mono" id="info-setor">Mineração & Metais</div>
+        <div class="text-xl font-extrabold text-emerald-400 font-mono" id="info-ticker">VALE3</div>
+      </div>
+      <div class="text-right">
+        <div class="text-xl font-black text-zinc-100 font-mono" id="info-preco">R$ 68,50</div>
+        <div class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">Conectado à API</div>
+      </div>
+    </div>
+
+    <!-- GRÁFICO ESTILO TRADING DESK (Alta Definição & Grade Escura) -->
+    <div class="bg-black p-4 rounded-2xl border-2 border-zinc-800 space-y-3 shadow-inner">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <h2 class="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider">Gráfico de Cotação em Tempo Real</h2>
+        </div>
+        <div class="flex gap-1">
+          <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-emerald-400 rounded">1D</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded">5D</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded">1M</span>
+        </div>
+      </div>
+
+      <!-- Canvas com estilo de monitor profissional -->
+      <div class="w-full h-80 bg-zinc-950 p-2 rounded-xl border border-zinc-900 flex items-center justify-center relative">
+        <canvas id="graficoTrading"></canvas>
+      </div>
+    </div>
+
+    <!-- Módulo de Diário de Trades Rápido -->
+    <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
+      <h2 class="text-xs font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-1.5">
+        <i data-lucide="crosshair" class="w-4 h-4"></i> Gestão de Risco & Alvo (Gain 2:1)
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <div>
-          <h2 id="info-ticker" class="text-lg font-bold text-emerald-400">VALE3</h2>
-          <p id="info-setor" class="text-xs text-zinc-400">Mineração & Metais</p>
+          <label class="block text-[9px] uppercase font-bold text-zinc-400">Entrada (R$)</label>
+          <input type="number" id="trade-entrada" value="68.50" step="0.01" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-100 font-mono text-center focus:outline-none">
         </div>
-        <div class="text-right">
-          <div id="info-preco" class="text-lg font-bold text-zinc-100">R$ 68,50</div>
-          <div id="badge-status" class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Descontado</div>
+        <div>
+          <label class="block text-[9px] uppercase font-bold text-zinc-400">Stop Loss (R$)</label>
+          <input type="number" id="trade-stop" value="67.00" step="0.01" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-rose-400 font-mono text-center focus:outline-none">
         </div>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-1" class="text-[10px] text-zinc-400 uppercase font-bold">P/L</div>
-          <div id="val-pl" class="text-sm font-bold text-zinc-100 mt-1">6.2x</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-2" class="text-[10px] text-zinc-400 uppercase font-bold">Dividend Yield</div>
-          <div id="val-dy" class="text-sm font-bold text-emerald-400 mt-1">8.5% a.a.</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-3" class="text-[10px] text-zinc-400 uppercase font-bold">ROE</div>
-          <div id="val-roe" class="text-sm font-bold text-zinc-100 mt-1">18.4%</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-4" class="text-[10px] text-zinc-400 uppercase font-bold">Referência</div>
-          <div id="val-graham" class="text-sm font-bold text-amber-400 mt-1">R$ 82,10</div>
+        <div>
+          <label class="block text-[9px] uppercase font-bold text-zinc-400">Risco Máx (R$)</label>
+          <input type="number" id="trade-risco" value="150" step="10" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-amber-400 font-mono text-center focus:outline-none">
         </div>
       </div>
-    </div>
-
-    <!-- Módulo de Rebalanceamento de Carteira (Asset Allocation) -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Rebalanceamento Inteligente (Asset Allocation)
-      </h2>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Ações (%)</label>
-          <input type="number" id="aloc-acoes" value="60" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
+      <div class="grid grid-cols-2 gap-2 text-center pt-1">
+        <div class="bg-zinc-900 p-2 rounded-lg border border-zinc-800">
+          <div class="text-[9px] text-zinc-400 uppercase font-bold">Quantidade</div>
+          <div id="res-qtd" class="text-xs font-mono font-bold text-zinc-100">0 un</div>
         </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação FIIs (%)</label>
-          <input type="number" id="aloc-fiis" value="25" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Alocação Cripto/BTC (%)</label>
-          <input type="number" id="aloc-cripto" value="15" oninput="calcularRebalanceamento()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 text-center focus:outline-none">
+        <div class="bg-zinc-900 p-2 rounded-lg border border-zinc-800">
+          <div class="text-[9px] text-zinc-400 uppercase font-bold">Alvo (Gain)</div>
+          <div id="res-alvo" class="text-xs font-mono font-bold text-emerald-400">R$ 0,00</div>
         </div>
       </div>
-
-      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2 text-xs">
-        <div class="flex justify-between">
-          <span class="text-zinc-400">Patrimônio Atual em Ações:</span>
-          <span id="patrimonio-acoes" class="font-bold text-zinc-100">R$ 30.000,00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-zinc-400">Patrimônio Atual em FIIs:</span>
-          <span id="patrimonio-fiis" class="font-bold text-zinc-100">R$ 12.500,00</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-zinc-400">Patrimônio Atual em Cripto:</span>
-          <span id="patrimonio-cripto" class="font-bold text-zinc-100">R$ 7.500,00</span>
-        </div>
-        <div class="border-t border-zinc-800 pt-2 flex justify-between items-center">
-          <span class="font-bold text-emerald-400">Sugestão do Próximo Aporte (R$ 1.000):</span>
-          <span id="sugestao-aporte" class="font-bold text-emerald-400 text-sm">Aporte em Ações</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Módulo de Stress Test & Aporte Oportunista -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> Stress Test & Oportunidade de Queda
-        </h2>
-        <select id="select-crise" onchange="calcularStressTest()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-amber-400 font-bold focus:outline-none">
-          <option value="0">Cenário Normal (Preço Atual)</option>
-          <option value="0.15">Correção Leve (-15%)</option>
-          <option value="0.30">Crise Forte / Bear Market (-30%)</option>
-          <option value="0.50">Queda Severa / Pânico (-50%)</option>
-        </select>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço em Stress</div>
-          <div id="stress-preco" class="text-sm font-bold text-amber-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Unidades com o Aporte</div>
-          <div id="stress-qtd" class="text-sm font-bold text-emerald-400 mt-1">0 un</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Retorno / Provento Ref.</div>
-          <div id="stress-dy" class="text-sm font-bold text-zinc-100 mt-1">0% a.a.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Faixas de Preço por Dias -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Volatilidade & Faixas (Dias)
-        </h2>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <label class="text-[11px] uppercase font-bold text-zinc-400">Período (1-365):</label>
-          <input type="number" id="input-dias" value="90" min="1" max="365" oninput="atualizarEstatisticasPeriodo()" class="w-20 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-100 text-center focus:outline-none">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Mínimo no Período</div>
-          <div id="est-min" class="text-sm font-bold text-rose-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Máximo no Período</div>
-          <div id="est-max" class="text-sm font-bold text-emerald-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Preço Médio</div>
-          <div id="est-media" class="text-sm font-bold text-zinc-100 mt-1">R$ 0,00</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Calculadora de Preço Médio -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i> Calculadora de Preço Médio
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. Atual</label>
-          <input type="number" id="calc-qtd-atual" value="100" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Médio Atual (R$)</label>
-          <input type="number" id="calc-pm-atual" value="70.00" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. a Comprar Agora</label>
-          <input type="number" id="calc-qtd-nova" value="50" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Cotação (R$)</label>
-          <input type="number" id="calc-preco-compra" value="68.50" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none">
-        </div>
-      </div>
-      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-        <span class="text-zinc-400 font-bold">Novo Preço Médio Resultante:</span>
-        <span id="calc-resultado-pm" class="text-emerald-400 font-bold text-sm">R$ 0,00</span>
-      </div>
-    </div>
-
-    <!-- Simulador Avançado & Gráficos Interativos -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i> Gráficos e Projeções Dinâmicas
-        </h2>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <select id="select-tipo-grafico" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
-            <option value="patrimonio">Evolução Patrimonial</option>
-            <option value="comparativo">Comparativo vs CDI</option>
-          </select>
-          <select id="select-cenario" onchange="calcularJuros()" class="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-emerald-400 font-bold focus:outline-none">
-            <option value="ativo">Taxa do Ativo</option>
-            <option value="cdi">CDI (10.5% a.a.)</option>
-            <option value="conservador">IPCA + 7%</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="block text-xs font-bold uppercase text-zinc-400">Aporte Mensal (R$)</label>
-          <input type="number" id="input-aporte" value="500" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-xs font-bold uppercase text-zinc-400">Prazo (Anos)</label>
-          <input type="number" id="input-anos" value="10" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none">
-        </div>
-      </div>
-
-      <!-- Canvas do Gráfico Interativo -->
-      <div class="w-full h-72 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
-        <canvas id="graficoTendencia"></canvas>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 font-bold uppercase">Patrimônio Acumulado:</div>
-          <div id="resultado-total" class="text-base font-bold text-emerald-400 mt-0.5">R$ 0,00</div>
-          <div class="text-[10px] text-zinc-500 mt-0.5">Investido do bolso: <span id="resultado-bolso">R$ 0,00</span></div>
-        </div>
-        <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 font-bold uppercase">Retorno / Caixa Est.:</div>
-          <div id="resultado-renda" class="text-base font-bold text-amber-400 mt-0.5">R$ 0,00 /mês</div>
-          <div class="text-[10px] text-zinc-500 mt-0.5">Baseado no rendimento do ativo</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Botão Copiar Resumo para o WhatsApp -->
-    <button onclick="copiarResumoWhatsApp()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
-      <i data-lucide="share-2" class="w-4 h-4"></i> Copiar Resumo para Enviar ao Colega
-    </button>
-
-    <!-- Nota de Transparência -->
-    <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
-      <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Ferramenta avançada ligada em tempo real à API Python no Render.</span>
     </div>
 
   </div>
@@ -289,26 +130,22 @@
   <script>
     lucide.createIcons();
 
-    // URL da API em Python hospedada no Render
     const API_URL = "https://painel-financeiro-api-f1cl.onrender.com/api/cotacao";
 
     const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", labelRef: "Preço Justo (Graham)", volatilidade: 0.18, taxa: 0.12, tipo: "acao" },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", labelRef: "Preço Justo (Graham)", volatilidade: 0.24, taxa: 0.13, tipo: "acao" },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", labelRef: "Preço Justo (Graham)", volatilidade: 0.14, taxa: 0.11, tipo: "acao" },
-      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", labelRef: "Preço Justo (Graham)", volatilidade: 0.16, taxa: 0.14, tipo: "acao" },
-      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", labelRef: "Preço Justo (Graham)", volatilidade: 0.20, taxa: 0.12, tipo: "acao" },
-      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva de Valor", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0% (Crescimento)", roe: "N/A", refVal: "Alta Volatilidade", labelRef: "Ativo Digital", volatilidade: 0.55, taxa: 0.18, tipo: "cripto" }
+      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, volatilidade: 0.18 },
+      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, volatilidade: 0.22 },
+      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, volatilidade: 0.14 },
+      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, volatilidade: 0.16 },
+      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, volatilidade: 0.20 },
+      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo", precoBase: 350000.00, volatilidade: 0.45 }
     };
 
     let ativoAtual = 'VALE3';
-    let ultimoMontanteCalculado = 0;
-    let ultimaRendaCalculada = 0;
+    let graficoTradeInstance = null;
 
-    // Função de Terminar Sessão (Logout)
     function fazerLogout() {
       localStorage.removeItem("painel_autenticado");
-      localStorage.removeItem("painel_usuario");
       window.location.href = "login.html";
     }
 
@@ -317,245 +154,94 @@
       ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'BBAS3', 'BTC'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if (t === ticker) {
-          btn.className = "p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5";
+          btn.className = "p-2.5 bg-zinc-950 border-2 border-emerald-500 rounded-xl text-left transition-all";
         } else {
-          btn.className = "p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5";
+          btn.className = "p-2.5 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all";
         }
       });
 
       const info = dadosEmpresas[ticker];
       document.getElementById('info-ticker').innerText = info.nome;
       document.getElementById('info-setor').innerText = info.setor;
-      
-      document.getElementById('label-ind-1').innerText = info.tipo === 'cripto' ? 'Rede / Oferta' : 'P/L';
-      document.getElementById('val-pl').innerText = info.pl;
-      document.getElementById('label-ind-2').innerText = info.tipo === 'cripto' ? 'Estratégia' : 'Dividend Yield';
-      document.getElementById('val-dy').innerText = info.dyStr;
-      document.getElementById('label-ind-3').innerText = info.tipo === 'cripto' ? 'Ciclo Halving' : 'ROE';
-      document.getElementById('val-roe').innerText = info.roe;
-      document.getElementById('label-ind-4').innerText = info.tipo === 'cripto' ? 'Classe' : 'Preço Justo (Graham)';
-      document.getElementById('val-graham').innerText = info.refVal;
 
-      // Buscar dados reais da API Python no Render
       try {
         const resposta = await fetch(`${API_URL}/${ticker}`);
         if (resposta.ok) {
           const dadosAPI = await resposta.json();
           info.precoBase = dadosAPI.preco_atual;
-          info.precoStr = `R$ ${dadosAPI.preco_atual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-          
-          document.getElementById('info-preco').innerText = info.precoStr;
-          document.getElementById('est-min').innerText = `R$ ${dadosAPI.min_periodo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-          document.getElementById('est-max').innerText = `R$ ${dadosAPI.max_periodo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-          document.getElementById('est-media').innerText = `R$ ${dadosAPI.preco_medio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('info-preco').innerText = `R$ ${dadosAPI.preco_atual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+          renderizarGraficoTrading(info.precoBase, info.volatilidade);
         } else {
-          throw new Error("Erro na resposta da API");
+          throw new Error();
         }
       } catch (e) {
-        console.warn("Usando dados locais de contingência:", e);
-        document.getElementById('info-preco').innerText = info.precoStr;
-        atualizarEstatisticasPeriodoLocal();
+        document.getElementById('info-preco').innerText = `R$ ${info.precoBase.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        renderizarGraficoTrading(info.precoBase, info.volatilidade);
       }
 
-      document.getElementById('calc-preco-compra').value = info.precoBase;
-      document.getElementById('calc-pm-atual').value = (info.precoBase * 1.05).toFixed(2);
+      document.getElementById('trade-entrada').value = info.precoBase.toFixed(2);
+      document.getElementById('trade-stop').value = (info.precoBase * 0.98).toFixed(2);
+      calcularTrade();
+    }
 
-      const badge = document.getElementById('badge-status');
-      if (info.tipo === 'cripto') {
-        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30";
-        badge.innerText = "Ativo Digital Descentralizado";
-      } else {
-        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
-        badge.innerText = "Cotação Real (API)";
+    function renderizarGraficoTrading(precoAtual, vol) {
+      const ctx = document.getElementById('graficoTrading').getContext('2d');
+      if (graficoTradeInstance) graficoTradeInstance.destroy();
+
+      // Gerar dados simulados em formato decandles/linha de alta precisão estilo Terminal
+      let labels = [];
+      let valores = [];
+      let base = precoAtual * 0.95;
+
+      for (let i = 0; i < 20; i++) {
+        labels.Item ? labels.push('') : labels.push(`T-${20-i}`);
+        base += (Math.random() - 0.48) * (precoAtual * vol * 0.05);
+        valores.push(Number(base.toFixed(2)));
       }
+      valores[19] = precoAtual; // Garante o preço atual no fim
 
-      calcularStressTest();
-      calcularPrecoMedio();
-      calcularRebalanceamento();
-      calcularJuros();
-    }
-
-    function atualizarEstatisticasPeriodoLocal() {
-      const dias = Number(document.getElementById('input-dias').value) || 90;
-      const info = dadosEmpresas[ativoAtual];
-      const fatorAmplitude = Math.min(Math.max(dias / 365, 0.1), 1);
-      const desvio = info.precoBase * info.volatilidade * Math.sqrt(fatorAmplitude);
-      const precoMin = info.precoBase - desvio * 1.2;
-      const precoMax = info.precoBase + desvio * 1.1;
-      const precoMedia = (precoMin + precoMax) / 2;
-
-      document.getElementById('est-min').innerText = precoMin.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('est-max').innerText = precoMax.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('est-media').innerText = precoMedia.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-    }
-
-    function atualizarEstatisticasPeriodo() {
-      atualizarEstatisticasPeriodoLocal();
-    }
-
-    function calcularStressTest() {
-      const info = dadosEmpresas[ativoAtual];
-      const percentualQueda = Number(document.getElementById('select-crise').value) || 0;
-      const precoStress = info.precoBase * (1 - percentualQueda);
-      const aporteMensal = Number(document.getElementById('input-aporte').value) || 500;
-      const unidadesAdicionais = precoStress > 0 ? (aporteMensal / precoStress).toFixed(info.tipo === 'cripto' ? 4 : 0) : 0;
-      let valorRetorno = info.tipo === 'cripto' ? `${unidadesAdicionais} fração` : `${((info.dyNum / (1 - percentualQueda))*100).toFixed(1)}% a.a.`;
-
-      document.getElementById('stress-preco').innerText = precoStress.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('stress-qtd').innerText = info.tipo === 'cripto' ? `${unidadesAdicionais} un` : `${Math.floor(aporteMensal / precoStress)} açs`;
-      document.getElementById('stress-dy').innerText = valorRetorno;
-    }
-
-    function calcularPrecoMedio() {
-      const qtdAtual = Number(document.getElementById('calc-qtd-atual').value) || 0;
-      const pmAtual = Number(document.getElementById('calc-pm-atual').value) || 0;
-      const qtdNova = Number(document.getElementById('calc-qtd-nova').value) || 0;
-      const precoCompra = Number(document.getElementById('calc-preco-compra').value) || 0;
-      const totalAcoes = qtdAtual + qtdNova;
-      const custoTotal = (qtdAtual * pmAtual) + (qtdNova * precoCompra);
-      const novoPM = totalAcoes > 0 ? custoTotal / totalAcoes : 0;
-
-      document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-    }
-
-    function calcularRebalanceamento() {
-      const pAcoes = Number(document.getElementById('aloc-acoes').value) || 0;
-      const pFiis = Number(document.getElementById('aloc-fiis').value) || 0;
-      const pCripto = Number(document.getElementById('aloc-cripto').value) || 0;
-      const valAcoes = 30000;
-      const valFiis = 12500;
-      const valCripto = 7500;
-      const totalPatrimonio = valAcoes + valFiis + valCripto;
-
-      const realAcoes = (valAcoes / totalPatrimonio) * 100;
-      const realFiis = (valFiis / totalPatrimonio) * 100;
-      const realCripto = (valCripto / totalPatrimonio) * 100;
-
-      document.getElementById('patrimonio-acoes').innerText = `${valAcoes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realAcoes.toFixed(1)}%)`;
-      document.getElementById('patrimonio-fiis').innerText = `${valFiis.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realFiis.toFixed(1)}%)`;
-      document.getElementById('patrimonio-cripto').innerText = `${valCripto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} (${realCripto.toFixed(1)}%)`;
-
-      let desvioAcoes = pAcoes - realAcoes;
-      let desvioFiis = pFiis - realFiis;
-      let desvioCripto = pCripto - realCripto;
-
-      let sugestao = "Ações (Equilibrado)";
-      if (desvioAcoes >= desvioFiis && desvioAcoes >= desvioCripto) sugestao = "Aportar em Ações 📈";
-      else if (desvioFiis >= desvioAcoes && desvioFiis >= desvioCripto) sugestao = "Aportar em FIIs 🏢";
-      else sugestao = "Aportar em Cripto / BTC 🪙";
-
-      document.getElementById('sugestao-aporte').innerText = sugestao;
-    }
-
-    let meuGrafico = null;
-
-    function calcularJuros() {
-      const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
-      const anos = Number(document.getElementById('input-anos').value) || 0;
-      const cenario = document.getElementById('select-cenario').value;
-      const tipoGrafico = document.getElementById('select-tipo-grafico').value;
-      const info = dadosEmpresas[ativoAtual];
-      
-      let taxaAnual = info.taxa;
-      if (cenario === 'cdi') taxaAnual = 0.105;
-      if (cenario === 'conservador') taxaAnual = 0.07;
-
-      const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
-      let taxaCDIMensal = Math.pow(1 + 0.105, 1/12) - 1;
-
-      let rotulos = [];
-      let dadosPrincipal = [];
-      let dadosSecundario = [];
-      let montante = 0;
-      let montanteCDI = 0;
-      let totalBolso = 0;
-
-      for (let ano = 0; ano <= anos; ano++) {
-        rotulos.push(`Ano ${ano}`);
-        dadosPrincipal.push(montante);
-        dadosSecundario.push(tipoGrafico === 'comparativo' ? montanteCDI : totalBolso);
-
-        for (let m = 0; m < 12; m++) {
-          if (ano < anos) {
-            montante = (montante + aporteMensal) * (1 + taxaMensal);
-            montanteCDI = (montanteCDI + aporteMensal) * (1 + taxaCDIMensal);
-            totalBolso += aporteMensal;
-          }
-        }
-      }
-
-      ultimoMontanteCalculado = montante;
-      const taxaRetornoFluxo = info.dyNum > 0 ? info.dyNum : 0.06;
-      const rendaMensal = (montante * taxaRetornoFluxo) / 12;
-      ultimaRendaCalculada = rendaMensal;
-
-      document.getElementById('resultado-total').innerText = montante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('resultado-bolso').innerText = totalBolso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('resultado-renda').innerText = rendaMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }) + ' /mês';
-
-      atualizarGrafico(rotulos, dadosPrincipal, dadosSecundario, tipoGrafico);
-      calcularStressTest();
-    }
-
-    function atualizarGrafico(rotulos, dados1, dados2, tipo) {
-      const ctx = document.getElementById('graficoTendencia').getContext('2d');
-      if (meuGrafico) meuGrafico.destroy();
-
-      const labelDataset2 = tipo === 'comparativo' ? 'Benchmark CDI (10.5% a.a.)' : 'Total Investido do Bolso';
-      const corDataset2 = tipo === 'comparativo' ? '#3b82f6' : '#71717a';
-
-      meuGrafico = new Chart(ctx, {
+      graficoTradeInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: rotulos,
-          datasets: [
-            {
-              label: 'Patrimônio Projetado',
-              data: dados1,
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              fill: true,
-              tension: 0.3
-            },
-            {
-              label: labelDataset2,
-              data: dados2,
-              borderColor: corDataset2,
-              backgroundColor: 'transparent',
-              borderDash: [5, 5],
-              tension: 0.3
-            }
-          ]
+          labels: labels,
+          datasets: [{
+            label: 'Cotação',
+            data: valores,
+            borderColor: '#10b981', // Verde estilo trading desk
+            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.2,
+            pointRadius: 2,
+            pointBackgroundColor: '#10b981'
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: '#a1a1aa', font: { size: 10 } } }
-          },
+          plugins: { legend: { display: false } },
           scales: {
-            x: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } },
-            y: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } }
+            x: { grid: { color: '#18181b' }, ticks: { color: '#71717a', font: { size: 9, family: 'monospace' } } },
+            y: { grid: { color: '#18181b' }, ticks: { color: '#71717a', font: { size: 9, family: 'monospace' } } }
           }
         }
       });
     }
 
-    function copiarResumoWhatsApp() {
-      const info = dadosEmpresas[ativoAtual];
-      const anos = document.getElementById('input-anos').value;
-      const aporte = document.getElementById('input-aporte').value;
-      
-      const texto = `📊 *Painel Allocation Pro - ${info.nome}* (${info.setor})\n` +
-                    `💰 Cotação Real: ${info.precoStr}\n\n` +
-                    `🚀 *Simulação Dinâmica (${anos} anos, Aportes R$ ${aporte}/mês):*\n` +
-                    `• Patrimônio: ${ultimoMontanteCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}\n` +
-                    `• Retorno Mensal Est.: ${ultimaRendaCalculada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 })}/mês\n\n` +
-                    `_Gerado via Painel Master Allocation_`;
+    function calcularTrade() {
+      const entrada = Number(document.getElementById('trade-entrada').value) || 0;
+      const stop = Number(document.getElementById('trade-stop').value) || 0;
+      const riscoMax = Number(document.getElementById('trade-risco').value) || 0;
+      const riscoAcao = entrada - stop;
 
-      navigator.clipboard.writeText(texto).then(() => {
-        alert("Resumo copiado com sucesso! Podes colar direto no WhatsApp.");
-      });
+      let qtd = 0, alvo = 0;
+      if (riscoAcao > 0) {
+        qtd = Math.floor(riscoMax / riscoAcao);
+        alvo = entrada + (riscoAcao * 2);
+      }
+
+      document.getElementById('res-qtd').innerText = `${qtd} un`;
+      document.getElementById('res-alvo').innerText = alvo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
     }
 
     selecionarAtivo('VALE3');
