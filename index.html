@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Estudos Financeiros & Volatilidade</title>
+  <title>Painel de Estudos Financeiros & Tendência</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 sm:p-8 flex justify-center items-start">
 
@@ -15,10 +16,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Risco</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Educacional & Volatilidade</span>
+          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Estudo de Ativos & Tendência</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-bold">Educacional & Gráfico</span>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, indicadores de volatilidade e simulação de longo prazo</p>
+        <p class="text-xs text-zinc-400 mt-1">Análise fundamentalista, volatilidade e projeção gráfica de longo prazo</p>
       </div>
     </div>
 
@@ -74,7 +75,7 @@
       </div>
     </div>
 
-    <!-- Novo Módulo: Análise de Volatilidade e Risco -->
+    <!-- Estudo de Volatilidade e Risco -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
         <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Estudo de Volatilidade & Risco
@@ -83,24 +84,23 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
           <div class="text-[10px] text-zinc-400 uppercase font-bold">Volatilidade (30d)</div>
-          <div id="vol-anual" class="text-sm font-bold text-amber-400 mt-1">22.5%</div>
+          <div id="vol-anual" class="text-sm font-bold text-amber-400 mt-1">24.2%</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
           <div class="text-[10px] text-zinc-400 uppercase font-bold">Mín / Máx (52 semanas)</div>
-          <div id="vol-minmax" class="text-xs font-bold text-zinc-100 mt-1">R$ 58,00 - R$ 75,20</div>
+          <div id="vol-minmax" class="text-xs font-bold text-zinc-100 mt-1">R$ 58,00 - R$ 78,50</div>
         </div>
         <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
           <div class="text-[10px] text-zinc-400 uppercase font-bold">Beta (vs. Ibovespa)</div>
-          <div id="vol-beta" class="text-sm font-bold text-zinc-100 mt-1">1.05</div>
+          <div id="vol-beta" class="text-sm font-bold text-zinc-100 mt-1">1.12</div>
         </div>
       </div>
-      <p class="text-[11px] text-zinc-500 italic">* Volatilidade histórica baseada no desvio padrão dos retornos diários recentizados para estudo estatístico.</p>
     </div>
 
-    <!-- Simulador de Juros Compostos (Educação Financeira) -->
+    <!-- Simulador de Juros Compostos com Gráfico de Tendência -->
     <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
       <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Simulador Realista de Longo Prazo
+        <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i> Gráfico de Tendência & Projeção
       </h2>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -112,6 +112,11 @@
           <label class="block text-xs font-bold uppercase text-zinc-400">Prazo (Anos)</label>
           <input type="number" id="input-anos" value="10" oninput="calcularJuros()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 focus:outline-none">
         </div>
+      </div>
+
+      <!-- Canvas do Gráfico de Tendência -->
+      <div class="w-full h-64 bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex items-center justify-center">
+        <canvas id="graficoTendencia"></canvas>
       </div>
 
       <div class="p-4 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center">
@@ -129,7 +134,7 @@
     <!-- Nota de Transparência -->
     <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 flex items-start gap-2">
       <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-      <span>Esta ferramenta destina-se exclusivamente a estudos estatísticos e educação financeira. O investimento em renda variável envolve riscos reais de mercado e rentabilidade passada não é garantia de lucro futuro.</span>
+      <span>Ferramenta educacional baseada em simulação matemática de juros compostos a uma taxa de referência de 10% a.a. Não constitui recomendação de compra ou venda de ativos.</span>
     </div>
 
   </div>
@@ -174,28 +179,90 @@
       document.getElementById('val-roe').innerText = info.roe;
       document.getElementById('val-divida').innerText = info.divida;
 
-      // Atualiza volatilidade
       document.getElementById('vol-anual').innerText = info.volAnual;
       document.getElementById('vol-minmax').innerText = info.minMax;
       document.getElementById('vol-beta').innerText = info.beta;
     }
 
+    let meuGrafico = null;
+
     function calcularJuros() {
       const aporteMensal = Number(document.getElementById('input-aporte').value) || 0;
       const anos = Number(document.getElementById('input-anos').value) || 0;
-      const meses = anos * 12;
       const taxaAnual = 0.10;
       const taxaMensal = Math.pow(1 + taxaAnual, 1/12) - 1;
 
-      let montante = 0;
-      for (let i = 0; i < meses; i++) {
-        montante = (montante + aporteMensal) * (1 + taxaMensal);
-      }
+      let rotulos = [];
+      let dadosMontante = [];
+      let dadosBolso = [];
 
-      const totalBolso = aporteMensal * meses;
+      let montante = 0;
+      let totalBolso = 0;
+
+      for (let ano = 0; ano <= anos; ano++) {
+        rotulos.push(`Ano ${ano}`);
+        dadosMontante.push(montante);
+        dadosBolso.push(totalBolso);
+
+        // Simula 12 meses para o próximo ano
+        for (let m = 0; m < 12; m++) {
+          if (ano < anos) {
+            montante = (montante + aporteMensal) * (1 + taxaMensal);
+            totalBolso += aporteMensal;
+          }
+        }
+      }
 
       document.getElementById('resultado-total').innerText = montante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       document.getElementById('resultado-bolso').innerText = totalBolso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      atualizarGrafico(rotulos, dadosMontante, dadosBolso);
+    }
+
+    function atualizarGrafico(rotulos, montante, bolso) {
+      const ctx = document.getElementById('graficoTendencia').getContext('2d');
+      
+      if (meuGrafico) {
+        meuGrafico.destroy();
+      }
+
+      meuGrafico = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: rotulos,
+          datasets: [
+            {
+              label: 'Patrimônio Total Estimado',
+              data: montante,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              fill: true,
+              tension: 3 / 10
+            },
+            {
+              label: 'Total Investido do Bolso',
+              data: bolso,
+              borderColor: '#71717a',
+              backgroundColor: 'transparent',
+              borderDash: [5, 5],
+              tension: 3 / 10
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#a1a1aa', font: { size: 10 } }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } },
+            y: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } }
+          }
+        }
+      });
     }
 
     calcularJuros();
