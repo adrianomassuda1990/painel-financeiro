@@ -48,7 +48,6 @@
       <p class="text-xs text-slate-400">Acesso Livre de Demonstração (Plano Premium)</p>
     </div>
     
-    <!-- Caixa informativa com a senha visível -->
     <div class="p-3 bg-indigo-950/60 border border-indigo-500/30 rounded-xl text-center space-y-1">
       <p class="text-xs text-indigo-300 font-medium">💡 Para testar livremente, utilize a senha:</p>
       <p class="text-sm font-mono font-bold text-indigo-400 tracking-widest">1234</p>
@@ -72,33 +71,66 @@
         </div>
         <p class="text-xs text-slate-400 mt-1">AM Technology — Demonstração Interativa para Clientes</p>
       </div>
-      <button onclick="sair()" class="text-xs text-slate-400 hover:text-red-400 flex items-center gap-1 transition-all">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Sair / Bloquear
-      </button>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Ver Site Principal
+        </a>
+        <button onclick="sairParaPrincipal()" class="text-xs text-slate-400 hover:text-red-400 flex items-center gap-1 transition-all">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+        </button>
+      </div>
     </div>
 
     <!-- AVISO DE MODO DEMONSTRAÇÃO -->
     <div class="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl flex items-center gap-3 text-xs text-indigo-300">
-      <i data-lucide="info" class="w-5 h-5 text-indigo-400 shrink-0"></i>
-      <span>Estás a testar o **Plano Premium da AM Technology**. Podes explorar os relatórios de faturamento, as sub-agendas e o cálculo automático de comissões.</span>
+      <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 shrink-0"></i>
+      <span>Estás a testar todos os recursos exclusivos do **Plano Premium**: relatórios avançados, automação de WhatsApp via Meta API, gestão de equipa e sub-agendas ilimitadas.</span>
     </div>
 
-    <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS REFORÇADO -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
-        <p class="text-xs font-bold uppercase text-slate-400">Faturamento Estimado (Mês)</p>
+        <p class="text-xs font-bold uppercase text-slate-400">Faturamento Mensal</p>
         <h3 id="stat-faturamento" class="text-2xl font-bold text-emerald-400 mt-1">R$ 0,00</h3>
-        <span class="text-xs text-emerald-500 mt-2 inline-block">📈 Baseado nos agendamentos reais</span>
+        <span class="text-xs text-emerald-500 mt-2 inline-block">📈 Crescimento em tempo real</span>
       </div>
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
-        <p class="text-xs font-bold uppercase text-slate-400">Atendimentos Registados</p>
+        <p class="text-xs font-bold uppercase text-slate-400">Total de Atendimentos</p>
         <h3 id="stat-atendimentos" class="text-2xl font-bold text-white mt-1">0</h3>
-        <span class="text-xs text-slate-400 mt-2 inline-block">Total na base de dados</span>
+        <span class="text-xs text-slate-400 mt-2 inline-block">Base de dados sincronizada</span>
       </div>
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
-        <p class="text-xs font-bold uppercase text-slate-400">Disparos WhatsApp (Meta API)</p>
-        <h3 class="text-2xl font-bold text-indigo-400 mt-1">Ativo / Seguro</h3>
-        <span class="text-xs text-indigo-300 mt-2 inline-block">Franquia Premium (1000 msg)</span>
+        <p class="text-xs font-bold uppercase text-slate-400">Disparos WhatsApp API</p>
+        <h3 class="text-2xl font-bold text-indigo-400 mt-1">100% Ativo</h3>
+        <span class="text-xs text-indigo-300 mt-2 inline-block">Lembretes automáticos ligados</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
+        <p class="text-xs font-bold uppercase text-slate-400">Taxa de Ocupação</p>
+        <h3 class="text-2xl font-bold text-amber-400 mt-1">88.5%</h3>
+        <span class="text-xs text-amber-300 mt-2 inline-block">Média dos profissionais</span>
+      </div>
+    </div>
+
+    <!-- RECURSOS EXCLUSIVOS PREMIUM -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-3 shadow-xl">
+        <div class="flex items-center gap-2 text-indigo-400 font-bold text-sm">
+          <i data-lucide="zap" class="w-4 h-4"></i> Automação e Marketing Ativo
+        </div>
+        <p class="text-xs text-slate-400">O sistema envia automaticamente mensagens de confirmação e lembretes de retorno para os clientes via API oficial do WhatsApp.</p>
+        <button onclick="alert('Funcionalidade Premium ativa: Disparos em massa configurados com sucesso!')" class="w-full py-2 bg-indigo-950/60 hover:bg-indigo-900/60 border border-indigo-500/30 text-indigo-300 font-bold text-xs rounded-xl transition-all">
+          Testar Disparo de Lembrete em Massa
+        </button>
+      </div>
+
+      <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-3 shadow-xl">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+          <i data-lucide="file-text" class="w-4 h-4"></i> Relatórios & Exportação
+        </div>
+        <p class="text-xs text-slate-400">Gere relatórios completos de faturamento por período, comissões detalhadas e histórico de cancelamentos em formato pronto para auditoria.</p>
+        <button onclick="alert('Relatório exportado com sucesso para a área de transferência / PDF!')" class="w-full py-2 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/30 text-emerald-300 font-bold text-xs rounded-xl transition-all">
+          Exportar Relatório Consolidado
+        </button>
       </div>
     </div>
 
@@ -138,7 +170,7 @@
     <!-- IDENTIDADE -->
     <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
       <h2 class="text-base font-bold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-3">
-        <i data-lucide="image" class="w-5 h-5 text-slate-400"></i> Identidade & Cores
+        <i data-lucide="image" class="w-5 h-5 text-slate-400"></i> Identidade & Cores do Sistema
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="space-y-2">
@@ -150,12 +182,15 @@
           <input type="file" id="input-arquivo-logo" accept="image/*" onchange="converterLogoParaBase64(this)" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500">
         </div>
         <div class="space-y-2">
-          <label class="block text-xs font-bold uppercase text-slate-400">Paleta de Cores</label>
+          <label class="block text-xs font-bold uppercase text-slate-400">Paleta de Cores Dinâmica</label>
           <select id="input-cor-tema" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
             <option value="zinc">Preto & Cinza (Clássico)</option>
             <option value="amber">Dourado / Luxo</option>
             <option value="emerald">Verde Executivo</option>
             <option value="blue">Azul Sofisticado</option>
+            <option value="purple">Roxo Dinâmico</option>
+            <option value="rose">Rosa / Coral</option>
+            <option value="cyan">Ciano Tecnológico</option>
           </select>
         </div>
       </div>
@@ -171,7 +206,7 @@
     <!-- ADICIONAR / GERIR PROFISSIONAIS -->
     <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
       <h2 class="text-base font-bold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-3">
-        <i data-lucide="users" class="w-5 h-5 text-slate-400"></i> Profissionais da Equipa (Sub-agendas)
+        <i data-lucide="users" class="w-5 h-5 text-slate-400"></i> Profissionais da Equipa (Sub-agendas Ilimitadas)
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
         <input type="text" id="novo-barbeiro-nome" placeholder="Nome (Ex: Carlos)" class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
@@ -482,7 +517,7 @@
       try {
         await carregarDadosServidor();
       } catch (e) {
-        console.log("A usar dados locais de emergência...");
+        console.log("A usar dados locais...");
       }
 
       if (senhaDigitada === "1234") {
@@ -492,6 +527,11 @@
       } else {
         alert("Senha incorreta! Utilize a senha indicada: 1234");
       }
+    }
+
+    // 🚀 Botão Sair redireciona para a página principal (index.html)
+    function sairParaPrincipal() {
+      window.location.href = "index.html";
     }
 
     function renderizarBarbeirosEquipa() {
@@ -631,7 +671,7 @@
 
       const selectH = document.getElementById('manual-horario');
       selectH.innerHTML = '';
-      horariosLista.forEach(h => {
+      gerarHorarios30min().forEach(h => {
         const opt = document.createElement('option'); opt.value = h; opt.innerText = h; selectH.appendChild(opt);
       });
       lucide.createIcons();
@@ -674,6 +714,7 @@
 
       const duracaoMin = servicoObj.duracao || 30;
       const blocos = Math.ceil(duracaoMin / 30);
+      const horariosLista = gerarHorarios30min();
       const idx = horariosLista.indexOf(horarioInicio);
       let horariosOcupados = [];
       for (let i = 0; i < blocos; i++) {
@@ -724,7 +765,7 @@
       grid.innerHTML = '';
       if (!bAtivo.horariosPausaPadrao) bAtivo.horariosPausaPadrao = [];
 
-      horariosLista.forEach(hora => {
+      gerarHorarios30min().forEach(hora => {
         const isPausa = bAtivo.horariosPausaPadrao.includes(hora);
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -740,7 +781,6 @@
     }
 
     function renderizarTudo() { renderizarServicos(); renderizarDias(); renderizarHorariosPausaPadrao(); renderizarAgendaDoDia(); }
-    function sair() { window.location.reload(); }
   </script>
 </body>
 </html>
