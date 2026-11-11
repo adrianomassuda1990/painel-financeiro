@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM Technology | Demonstração Plano Premium (Barbearia do Bellan)</title>
+  <title>AM Technology | Demonstração Plano Premium (Barbearia Executiva)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -45,19 +45,19 @@
   <div class="w-full max-w-md bg-slate-900 min-h-screen sm:min-h-[750px] sm:rounded-3xl shadow-2xl flex flex-col justify-between overflow-hidden relative border border-slate-800">
     
     <div>
-      <!-- 🌟 NOVIDADE DEMONSTRAÇÃO PREMIUM: Selo no Topo -->
+      <!-- Selo de Demonstração Premium -->
       <div class="bg-indigo-950/80 border-b border-indigo-500/30 px-4 py-2 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-indigo-300">
         <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
-        <span>Tecnologia AM Technology • Plano Premium Ativo</span>
+        <span>AM Technology • Plano Premium Ativo (Demo)</span>
       </div>
 
       <div class="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-6 text-center relative border-b border-slate-800">
         <div id="container-logo" class="w-20 h-20 rounded-full border-2 theme-border shadow-lg mx-auto overflow-hidden bg-slate-950 flex items-center justify-center mb-2">
           <i data-lucide="scissors" class="w-10 h-10 theme-text"></i>
         </div>
-        <h1 id="nome-barbearia-cliente" class="text-xl font-bold tracking-tight uppercase">Barbearia do Bellan</h1>
+        <h1 id="nome-barbearia-cliente" class="text-xl font-bold tracking-tight uppercase">Barbearia Executiva</h1>
         <p class="text-xs text-slate-400 flex items-center justify-center gap-1 mt-1 font-medium">
-          <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i> Agendamento Verificado & Automático
+          <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i> Agendamento Online & Automático
         </p>
       </div>
 
@@ -149,7 +149,7 @@
       </button>
       <div class="text-center pt-1 flex justify-center items-center gap-3">
         <a href="admin.html" class="text-[11px] text-slate-500 hover:text-slate-300 flex items-center gap-1">
-          <i data-lucide="lock" class="w-3 h-3"></i> Painel do Barbeiro
+          <i data-lucide="lock" class="w-3 h-3"></i> Painel do Gestor
         </a>
         <span class="text-slate-700">•</span>
         <span class="text-[11px] text-indigo-400 font-semibold">AM Technology</span>
@@ -167,18 +167,33 @@
     let horarioEscolhido = "";
     let horariosOcupadosPeloServico = [];
     let dadosGlobais = {
-      nomeBarbearia: "Barbearia do Bellan",
+      nomeBarbearia: "Barbearia Executiva",
       logoUrl: "",
       corTema: "zinc",
       barbeiros: [
-        { id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] }
+        { id: 'carlos', nome: 'Carlos', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] }
       ]
     };
 
-    const mapaCoresHex = { zinc: "#d4d4d8", amber: "#fbbf24", emerald: "#34d399", blue: "#60a5fa" };
+    // Paletas de cores disponíveis (incluindo opções dinâmicas)
+    const mapaCoresHex = { 
+      zinc: "#d4d4d8", 
+      amber: "#fbbf24", 
+      emerald: "#34d399", 
+      blue: "#60a5fa", 
+      purple: "#c084fc", 
+      rose: "#fb7185", 
+      cyan: "#22d3ee" 
+    };
 
     function aplicarTemaVisual(corTema) {
-      document.documentElement.style.setProperty('--theme-color', mapaCoresHex[corTema] || mapaCoresHex.zinc);
+      // Se a cor escolhida for 'aleatoria', seleciona uma cor dinâmica do mapa
+      let corFinal = corTema;
+      if (corTema === 'aleatoria' || !mapaCoresHex[corTema]) {
+        const chaves = Object.keys(mapaCoresHex);
+        corFinal = chaves[Math.floor(Math.random() * chaves.length)];
+      }
+      document.documentElement.style.setProperty('--theme-color', mapaCoresHex[corFinal] || mapaCoresHex.zinc);
     }
 
     function atualizarIndicadorPassos(passoAtivo) {
@@ -206,7 +221,7 @@
     async function carregarDadosFirebase() {
       if (!window.dbFirestore) return;
       try {
-        const docRef = window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_bellan_multi");
+        const docRef = window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_demo_multi");
         const docSnap = await window.fsGetDoc(docRef);
         
         if (docSnap.exists()) {
@@ -216,11 +231,11 @@
           }
         }
 
-        if (!dadosGlobais.barbeiros.some(b => b.id === 'bellan')) {
-          dadosGlobais.barbeiros.unshift({ id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] });
+        if (!dadosGlobais.barbeiros.some(b => b.id === 'carlos')) {
+          dadosGlobais.barbeiros.unshift({ id: 'carlos', nome: 'Carlos', whats: '', servicos: [{ id: 'corte', nome: 'Corte', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] });
         }
 
-        const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi");
+        const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_demo_multi");
         const agendamentosSnap = await window.fsGetDocs(agendamentosRef);
         
         dadosGlobais.barbeiros.forEach(b => b.agendamentos = []);
@@ -265,7 +280,7 @@
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold theme-text border border-slate-700">${b.nome.charAt(0)}</div>
             <div>
-              <div class="font-bold text-sm text-slate-100">${b.nome} ${b.id === 'bellan' ? '(Proprietário)' : ''}</div>
+              <div class="font-bold text-sm text-slate-100">${b.nome}</div>
               <div class="text-xs text-slate-400">Profissional Especializado</div>
             </div>
           </div>
@@ -429,7 +444,7 @@
         btnFinalizar.innerText = "A verificar disponibilidade...";
 
         try {
-          const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi");
+          const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_demo_multi");
           const agendamentosSnap = await window.fsGetDocs(agendamentosRef);
           
           let conflito = false;
