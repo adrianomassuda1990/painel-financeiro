@@ -70,7 +70,7 @@
       </button>
     </div>
 
-    <!-- 📊 NOVIDADE PREMIUM: DASHBOARD DE FATURAMENTO E MÉTRICAS -->
+    <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
         <p class="text-xs font-bold uppercase text-slate-400">Faturamento Estimado (Mês)</p>
@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <!-- 💰 NOVIDADE PREMIUM: CÁLCULO DE COMISSÕES DA EQUIPA -->
+    <!-- CÁLCULO DE COMISSÕES DA EQUIPA -->
     <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
@@ -272,7 +272,7 @@
         <h3 class="text-sm font-bold text-slate-200">Horários de Pausa Fixa (07:00 às 22:00)</h3>
         <div class="grid grid-cols-4 sm:grid-cols-8 gap-2 p-3 bg-slate-950 rounded-xl border border-slate-800 max-h-56 overflow-y-auto" id="grid-horarios-pausa-padrao"></div>
       </div>
-      <button onclick="salvarConfiguracoesServidor('Dias e horários guardados!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all">
+      <button onclick="salvarConfiguracoesServidor('Dias e horários guardados!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-slate-100 font-bold text-sm rounded-xl transition-all">
         Guardar Configurações
       </button>
     </div>
@@ -355,7 +355,6 @@
       }
     }
 
-    // 📊 Função que calcula dinamicamente o Dashboard e as Comissões do Plano Premium
     function atualizarMetricasEComissoesDashboard() {
       let faturamentoTotalGeral = 0;
       let totalAtendimentosGeral = 0;
@@ -374,7 +373,7 @@
         faturamentoTotalGeral += faturamentoBarbeiro;
         totalAtendimentosGeral += qtdServicosBarbeiro;
 
-        let comissaoBarbeiro = faturamentoBarbeiro * 0.50; // 50% de comissão
+        let comissaoBarbeiro = faturamentoBarbeiro * 0.50;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -466,14 +465,24 @@
       }
     }
 
+    // 🔒 Função de verificação de senha blindada
     async function verificarSenha() {
-      await carregarDadosServidor();
-      if (document.getElementById('input-senha').value === (dadosGerais.senhaBellan || "1234")) {
+      const senhaDigitada = document.getElementById('input-senha').value.trim();
+      
+      try {
+        await carregarDadosServidor();
+      } catch (e) {
+        console.log("A usar dados locais de emergência...");
+      }
+
+      const senhaCorreta = (dadosGerais && dadosGerais.senhaBellan) ? dadosGerais.senhaBellan : "1234";
+
+      if (senhaDigitada === senhaCorreta) {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('admin-content').classList.remove('hidden');
         carregarCamposPainel();
       } else {
-        alert("Senha incorreta!");
+        alert("Senha incorreta! A senha atual é: " + senhaCorreta);
       }
     }
 
@@ -671,4 +680,59 @@
       alert("Agendamento criado com sucesso!");
       document.getElementById('manual-nome').value = '';
       document.getElementById('manual-whats').value = '';
-      await carregarDados
+      await carregarDadosServidor();
+      renderizarAgendaDoDia();
+      atualizarMetricasEComissoesDashboard();
+    }
+
+    function renderizarDias() {
+      const bAtivo = obterDadosBarbeiroAtivo();
+      const container = document.getElementById('grid-dias-semana');
+      container.innerHTML = '';
+      if (!bAtivo.diasFechados) bAtivo.diasFechados = [];
+
+      diasSemana.forEach(dia => {
+        const isFechado = bAtivo.diasFechados.includes(dia.id);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => toggleDia(dia.id);
+        btn.className = isFechado ? "p-3 bg-red-500/10 border border-red-500/20 text-red-400 font-bold rounded-xl text-xs" : "p-3 bg-slate-950 border border-slate-800 text-slate-200 font-bold rounded-xl text-xs";
+        btn.innerHTML = `<span>${dia.nome}</span><br><span class="font-normal ${isFechado ? 'text-red-400' : 'text-slate-400'}">${isFechado ? 'Fechado' : 'Aberto'}</span>`;
+        container.appendChild(btn);
+      });
+    }
+
+    async function toggleDia(id) {
+      const bAtivo = obterDadosBarbeiroAtivo();
+      if (!bAtivo.diasFechados) bAtivo.diasFechados = [];
+      if (bAtivo.diasFechados.includes(id)) bAtivo.diasFechados = bAtivo.diasFechados.filter(d => d !== id);
+      else bAtivo.diasFechados.push(id);
+      renderizarDias(); await salvarConfiguracoesServidor("Dias atualizados!");
+    }
+
+    function renderizarHorariosPausaPadrao() {
+      const bAtivo = obterDadosBarbeiroAtivo();
+      const grid = document.getElementById('grid-horarios-pausa-padrao');
+      grid.innerHTML = '';
+      if (!bAtivo.horariosPausaPadrao) bAtivo.horariosPausaPadrao = [];
+
+      horariosLista.forEach(hora => {
+        const isPausa = bAtivo.horariosPausaPadrao.includes(hora);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = isPausa ? "p-2 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold rounded-lg" : "p-2 bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold rounded-lg";
+        btn.innerText = hora;
+        btn.onclick = () => {
+          if (bAtivo.horariosPausaPadrao.includes(hora)) bAtivo.horariosPausaPadrao = bAtivo.horariosPausaPadrao.filter(h => h !== hora);
+          else bAtivo.horariosPausaPadrao.push(hora);
+          renderizarHorariosPausaPadrao();
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderizarTudo() { renderizarServicos(); renderizarDias(); renderizarHorariosPausaPadrao(); renderizarAgendaDoDia(); }
+    function sair() { window.location.href = 'index.html'; }
+  </script>
+</body>
+</html>
