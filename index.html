@@ -3,418 +3,479 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Master Pro - Finanças & Trading Desk</title>
+  <title>AM Technology | Demonstração Plano Premium (Barbearia do Bellan)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    if (localStorage.getItem("painel_autenticado") !== "true") {
-      window.location.href = "login.html";
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0lLW90e0p-bGgVvcuK6yqSHqdGE4gKhc",
+      authDomain: "site-danilo-config.firebaseapp.com",
+      projectId: "site-danilo-config",
+      storageBucket: "site-danilo-config.firebasestorage.app",
+      messagingSenderId: "109226079646",
+      appId: "1:109226079646:web:256beb9a3d91afda33928f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.dbFirestore = db;
+    window.fsDoc = doc;
+    window.fsGetDoc = getDoc;
+    window.fsCollection = collection;
+    window.fsAddDoc = addDoc;
+    window.fsGetDocs = getDocs;
+
+    if (typeof carregarDadosFirebase === 'function') {
+      carregarDadosFirebase();
     }
   </script>
+  <style>
+    .theme-border { border-color: var(--theme-color) !important; }
+    .theme-bg { background-color: var(--theme-color) !important; }
+    .theme-text { color: var(--theme-color) !important; }
+  </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen p-4 sm:p-8 flex justify-center items-start">
+<body class="bg-slate-950 min-h-screen flex justify-center p-0 sm:p-4 text-slate-100">
 
-  <div class="w-full max-w-2xl bg-zinc-900 p-6 sm:p-8 rounded-3xl border border-zinc-800 shadow-2xl space-y-6">
+  <div class="w-full max-w-md bg-slate-900 min-h-screen sm:min-h-[750px] sm:rounded-3xl shadow-2xl flex flex-col justify-between overflow-hidden relative border border-slate-800">
     
-    <!-- Cabeçalho -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-5">
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-zinc-100 uppercase tracking-tight">Finanças & Trading Desk</h1>
-          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-1 rounded-full font-mono font-bold">CONTROLO TOTAL</span>
+    <div>
+      <!-- 🌟 NOVIDADE DEMONSTRAÇÃO PREMIUM: Selo no Topo -->
+      <div class="bg-indigo-950/80 border-b border-indigo-500/30 px-4 py-2 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-indigo-300">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
+        <span>Tecnologia AM Technology • Plano Premium Ativo</span>
+      </div>
+
+      <div class="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-6 text-center relative border-b border-slate-800">
+        <div id="container-logo" class="w-20 h-20 rounded-full border-2 theme-border shadow-lg mx-auto overflow-hidden bg-slate-950 flex items-center justify-center mb-2">
+          <i data-lucide="scissors" class="w-10 h-10 theme-text"></i>
         </div>
-        <p class="text-xs text-zinc-400 mt-1">Cotações ao vivo, gestão de risco, diário de trades e orçamento</p>
+        <h1 id="nome-barbearia-cliente" class="text-xl font-bold tracking-tight uppercase">Barbearia do Bellan</h1>
+        <p class="text-xs text-slate-400 flex items-center justify-center gap-1 mt-1 font-medium">
+          <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i> Agendamento Verificado & Automático
+        </p>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="forcarAtualizacaoManual()" title="Atualizar Cotações Agora" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-emerald-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="icone-refresh"></i> Atualizar
-        </button>
-        <button onclick="fazerLogout()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-rose-400 border border-zinc-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
-        </button>
-      </div>
-    </div>
 
-    <!-- Seletor de Ativos -->
-    <div class="space-y-3">
-      <label class="block text-xs font-bold uppercase text-zinc-400">Selecione o Ativo de Referência</label>
-      <div class="grid grid-cols-2 sm:grid-cols-6 gap-2" id="container-ativos">
-        <button onclick="selecionarAtivo('VALE3')" id="btn-VALE3" class="p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-zinc-100">VALE3</div>
-          <div class="text-[10px] text-zinc-400">Mineração</div>
-        </button>
-        <button onclick="selecionarAtivo('PETR4')" id="btn-PETR4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-zinc-100">PETR4</div>
-          <div class="text-[10px] text-zinc-400">Energia</div>
-        </button>
-        <button onclick="selecionarAtivo('ITUB4')" id="btn-ITUB4" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-zinc-100">ITUB4</div>
-          <div class="text-[10px] text-zinc-400">Financeiro</div>
-        </button>
-        <button onclick="selecionarAtivo('WEGE3')" id="btn-WEGE3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-zinc-100">WEGE3</div>
-          <div class="text-[10px] text-zinc-400">Industrial</div>
-        </button>
-        <button onclick="selecionarAtivo('BBAS3')" id="btn-BBAS3" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-zinc-100">BBAS3</div>
-          <div class="text-[10px] text-zinc-400">Bancos</div>
-        </button>
-        <button onclick="selecionarAtivo('BTC')" id="btn-BTC" class="p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5">
-          <div class="font-bold text-xs text-amber-400">BTC</div>
-          <div class="text-[10px] text-zinc-400">Criptoativo</div>
-        </button>
+      <!-- Indicador de Passos Dinâmico -->
+      <div id="steps-indicator-wrapper" class="flex border-b border-slate-800 bg-slate-950/50 px-4 py-3 text-xs font-medium text-slate-400 justify-between items-center">
+        <button type="button" onclick="irParaPasso(0)" id="step-0-indicator" class="text-slate-500 transition-all flex items-center gap-1">0. Profissional</button>
+        <span class="text-slate-700">&gt;</span>
+        <button type="button" onclick="irParaPasso(1)" id="step-1-indicator" class="text-slate-500 transition-all flex items-center gap-1">1. Serviço</button>
+        <span class="text-slate-700">&gt;</span>
+        <button type="button" onclick="irParaPasso(2)" id="step-2-indicator" class="text-slate-500 transition-all flex items-center gap-1">2. Horário</button>
+        <span class="text-slate-700">&gt;</span>
+        <button type="button" onclick="irParaPasso(3)" id="step-3-indicator" class="text-slate-500 transition-all flex items-center gap-1">3. Fim</button>
       </div>
-    </div>
 
-    <!-- Detalhes Fundamentais & Preço Justo -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <div class="flex justify-between items-center border-b border-zinc-800/80 pb-3">
+      <!-- PASSO 0 -->
+      <div id="step-0" class="p-5 space-y-4">
         <div>
-          <h2 id="info-ticker" class="text-lg font-bold text-emerald-400">VALE3</h2>
-          <p id="info-setor" class="text-xs text-zinc-400">Mineração & Metais</p>
-        </div>
-        <div class="text-right">
-          <div id="info-preco" class="text-lg font-bold text-zinc-100">R$ 68,50</div>
-          <div id="badge-status" class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono">Cotação Real (API)</div>
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-2">Selecione o Profissional (Sub-agenda)</label>
+          <div class="space-y-3" id="container-barbeiros-cliente">
+            <p class="text-xs text-slate-500">A carregar profissionais...</p>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-1" class="text-[10px] text-zinc-400 uppercase font-bold">P/L</div>
-          <div id="val-pl" class="text-sm font-bold text-zinc-100 mt-1">6.2x</div>
+      <!-- PASSO 1 -->
+      <div id="step-1" class="p-5 space-y-5 hidden">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-2">Selecione o Serviço</label>
+          <div class="space-y-2" id="container-servicos-cliente"></div>
         </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-2" class="text-[10px] text-zinc-400 uppercase font-bold">Dividend Yield</div>
-          <div id="val-dy" class="text-sm font-bold text-emerald-400 mt-1">8.5% a.a.</div>
+      </div>
+
+      <!-- PASSO 2 -->
+      <div id="step-2" class="p-5 space-y-5 hidden">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-2">Selecione a Data</label>
+          <input type="date" id="data-agendamento" onchange="carregarHorariosCliente()" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm theme-text font-bold focus:outline-none">
         </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-3" class="text-[10px] text-zinc-400 uppercase font-bold">ROE</div>
-          <div id="val-roe" class="text-sm font-bold text-zinc-100 mt-1">18.4%</div>
+
+        <div id="alerta-dia-fechado" class="hidden p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-center space-y-1">
+          <p class="text-sm font-bold text-red-400">Profissional Indisponível / Fechado nesta Data!</p>
+          <p class="text-xs text-slate-400">Por favor, escolha outro dia.</p>
         </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div id="label-ind-4" class="text-[10px] text-zinc-400 uppercase font-bold">Referência</div>
-          <div id="val-graham" class="text-sm font-bold text-amber-400 mt-1">R$ 82,10</div>
+
+        <div id="wrapper-horarios">
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Horários Disponíveis</label>
+          <p class="text-[11px] text-slate-400 mb-2" id="info-duracao-servico"></p>
+          <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-60 overflow-y-auto pr-1" id="horarios-grid-cliente"></div>
         </div>
+      </div>
+
+      <!-- PASSO 3 -->
+      <div id="step-3" class="p-5 space-y-4 hidden">
+        <div class="p-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-5 h-5 shrink-0 text-slate-400"></i>
+          <span>Agendamento com <b id="nome-barbeiro-resumo" class="theme-text"></b>.</span>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Seu Nome Completo *</label>
+          <input type="text" id="nome-cliente" placeholder="Ex: Carlos Silva" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-400 mb-1">WhatsApp / Telefone *</label>
+          <input type="tel" id="whats-cliente" placeholder="Ex: (19) 99999-9999" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- PASSO 4 -->
+      <div id="step-4" class="p-6 text-center space-y-4 hidden my-auto">
+        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto border border-emerald-500/40 shadow-xl">
+          <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+        </div>
+        <div class="space-y-2">
+          <h2 class="text-xl font-bold text-slate-100">Agendamento Registado!</h2>
+          <div class="p-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 space-y-1">
+            <p class="font-bold text-white">📋 Mensagem copiada automaticamente!</p>
+            <p id="aviso-instrucao-canal">A abrir o WhatsApp...</p>
+          </div>
+        </div>
+        <div id="container-botoes-manuais" class="space-y-2 pt-2"></div>
+        <button onclick="location.reload()" class="w-full py-3 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl mt-3">Novo Agendamento</button>
       </div>
     </div>
 
-    <!-- GRÁFICO ESTILO TRADING DESK PROFISSIONAL -->
-    <div class="bg-black p-5 rounded-2xl border-2 border-zinc-800 space-y-3 shadow-inner">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <h2 class="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider">Gráfico de Cotação em Tempo Real</h2>
-        </div>
-        <span class="text-[10px] font-mono px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-emerald-400 rounded">AUTO-SYNC (30s)</span>
-      </div>
-      <div class="w-full h-72 bg-zinc-950 p-2 rounded-xl border border-zinc-900 flex items-center justify-center">
-        <canvas id="graficoTrading"></canvas>
-      </div>
-    </div>
-
-    <!-- MÓDULO DE CONTROLO DE FINANÇAS & ORÇAMENTO -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i> Controlo de Finanças Mensais
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Receita Mensal Líquida (R$)</label>
-          <input type="number" id="fin-receita" value="6500" step="100" oninput="calcularFinancas()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 font-mono focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[11px] uppercase font-bold text-zinc-400">Despesas Fixas & Variáveis (R$)</label>
-          <input type="number" id="fin-despesas" value="3800" step="100" oninput="calcularFinancas()" class="w-full p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-rose-400 font-mono focus:outline-none">
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Saldo / Caixa Disponível</div>
-          <div id="fin-saldo" class="text-sm font-mono font-bold text-emerald-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Taxa de Poupança</div>
-          <div id="fin-taxa" class="text-sm font-mono font-bold text-zinc-100 mt-1">0%</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MÓDULO DE TRADING: Calculadora & Diário de Trades -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-emerald-500/30 space-y-4 shadow-xl">
-      <h2 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
-        <i data-lucide="crosshair" class="w-4 h-4"></i> Gestão de Risco & Diário de Trades
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Preço Entrada (R$)</label>
-          <input type="number" id="trade-entrada" value="68.50" step="0.01" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 font-mono text-center focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Stop Loss (R$)</label>
-          <input type="number" id="trade-stop" value="67.00" step="0.01" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-rose-400 font-mono text-center focus:outline-none">
-        </div>
-        <div class="space-y-1">
-          <label class="block text-[10px] uppercase font-bold text-zinc-400">Risco Máximo (R$)</label>
-          <input type="number" id="trade-risco-max" value="150" step="10" oninput="calcularTrade()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-amber-400 font-mono text-center focus:outline-none">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Quantidade Ideal</div>
-          <div id="trade-qtd" class="text-sm font-mono font-bold text-zinc-100 mt-1">0 un</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Alvo de Lucro (Gain 2:1)</div>
-          <div id="trade-alvo" class="text-sm font-mono font-bold text-emerald-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold">Lucro Potencial</div>
-          <div id="trade-lucro" class="text-sm font-mono font-bold text-emerald-400 mt-1">R$ 0,00</div>
-        </div>
-      </div>
-
-      <button onclick="registarTrade()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
-        <i data-lucide="plus-circle" class="w-4 h-4"></i> Registar Operação no Diário
+    <div id="footer-actions" class="p-4 bg-slate-900 border-t border-slate-800 flex flex-col gap-3">
+      <button id="next-btn" onclick="nextStep()" class="w-full py-3.5 theme-bg text-slate-950 font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+        <span>Avançar para Serviços</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </button>
-
-      <!-- Tabela do Diário -->
-      <div class="space-y-2 pt-2">
-        <div class="flex justify-between items-center text-xs text-zinc-400 font-bold uppercase">
-          <span>Histórico de Trades Abertos</span>
-          <span id="contador-trades">0 operações</span>
-        </div>
-        <div class="overflow-x-auto max-h-40 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-900">
-          <table class="w-full text-left text-xs text-zinc-300">
-            <thead class="bg-zinc-950 text-zinc-400 uppercase text-[10px] sticky top-0 font-mono">
-              <tr>
-                <th class="p-2">Ativo</th>
-                <th class="p-2">Entrada</th>
-                <th class="p-2">Alvo</th>
-                <th class="p-2">Stop</th>
-                <th class="p-2 text-center">Ações</th>
-                <th class="p-2 text-center">Ação</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-trades" class="divide-y divide-zinc-800 font-mono text-[11px]">
-              <!-- Preenchido via JS -->
-            </tbody>
-          </table>
-        </div>
+      <div class="text-center pt-1 flex justify-center items-center gap-3">
+        <a href="admin.html" class="text-[11px] text-slate-500 hover:text-slate-300 flex items-center gap-1">
+          <i data-lucide="lock" class="w-3 h-3"></i> Painel do Barbeiro
+        </a>
+        <span class="text-slate-700">•</span>
+        <span class="text-[11px] text-indigo-400 font-semibold">AM Technology</span>
       </div>
     </div>
-
-    <!-- Calculadora de Preço Médio -->
-    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-4">
-      <h2 class="text-sm font-bold text-zinc-200 flex items-center gap-2">
-        <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i> Calculadora de Preço Médio
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="space-y-1"><label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. Atual</label><input type="number" id="calc-qtd-atual" value="100" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none"></div>
-        <div class="space-y-1"><label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Médio Atual (R$)</label><input type="number" id="calc-pm-atual" value="70.00" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none"></div>
-        <div class="space-y-1"><label class="block text-[11px] uppercase font-bold text-zinc-400">Qtd. a Comprar</label><input type="number" id="calc-qtd-nova" value="50" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none"></div>
-        <div class="space-y-1"><label class="block text-[11px] uppercase font-bold text-zinc-400">Preço Cotação (R$)</label><input type="number" id="calc-preco-compra" value="68.50" step="0.01" oninput="calcularPrecoMedio()" class="w-full p-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-100 focus:outline-none"></div>
-      </div>
-      <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-        <span class="text-zinc-400 font-bold">Novo Preço Médio Resultante:</span>
-        <span id="calc-resultado-pm" class="text-emerald-400 font-bold text-sm">R$ 0,00</span>
-      </div>
-    </div>
-
-    <!-- Botão WhatsApp -->
-    <button onclick="copiarResumoWhatsApp()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
-      <i data-lucide="share-2" class="w-4 h-4"></i> Copiar Resumo para o WhatsApp
-    </button>
 
   </div>
 
   <script>
     lucide.createIcons();
 
-    const API_URL = "https://painel-financeiro-api-f1cl.onrender.com/api/cotacao";
-
-    const dadosEmpresas = {
-      VALE3: { nome: "VALE3", setor: "Mineração & Metais", precoBase: 68.50, precoStr: "R$ 68,50", pl: "6.2x", dyNum: 0.085, dyStr: "8.5% a.a.", roe: "18.4%", refVal: "R$ 82,10", volatilidade: 0.18 },
-      PETR4: { nome: "PETR4", setor: "Energia & Petróleo", precoBase: 38.20, precoStr: "R$ 38,20", pl: "4.5x", dyNum: 0.121, dyStr: "12.1% a.a.", roe: "24.1%", refVal: "R$ 46,50", volatilidade: 0.24 },
-      ITUB4: { nome: "ITUB4", setor: "Setor Financeiro", precoBase: 32.90, precoStr: "R$ 32,90", pl: "9.1x", dyNum: 0.058, dyStr: "5.8% a.a.", roe: "21.0%", refVal: "R$ 35,00", volatilidade: 0.14 },
-      WEGE3: { nome: "WEGE3", setor: "Bens Industriais", precoBase: 40.10, precoStr: "R$ 40,10", pl: "28.5x", dyNum: 0.021, dyStr: "2.1% a.a.", roe: "26.5%", refVal: "R$ 31,20", volatilidade: 0.16 },
-      BBAS3: { nome: "BBAS3", setor: "Setor Bancário", precoBase: 27.50, precoStr: "R$ 27,50", pl: "4.1x", dyNum: 0.095, dyStr: "9.5% a.a.", roe: "20.2%", refVal: "R$ 34,80", volatilidade: 0.20 },
-      BTC:   { nome: "Bitcoin (BTC)", setor: "Criptoativo / Reserva", precoBase: 350000.00, precoStr: "R$ 350.000", pl: "N/A", dyNum: 0.00, dyStr: "0.0%", roe: "N/A", refVal: "Alta Volatilidade", volatilidade: 0.55 }
+    let currentStep = 0;
+    let barbeiroEscolhido = null;
+    let servicoEscolhido = null;
+    let horarioEscolhido = "";
+    let horariosOcupadosPeloServico = [];
+    let dadosGlobais = {
+      nomeBarbearia: "Barbearia do Bellan",
+      logoUrl: "",
+      corTema: "zinc",
+      barbeiros: [
+        { id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] }
+      ]
     };
 
-    let ativoAtual = 'VALE3';
-    let graficoTradingInst = null;
+    const mapaCoresHex = { zinc: "#d4d4d8", amber: "#fbbf24", emerald: "#34d399", blue: "#60a5fa" };
 
-    function fazerLogout() {
-      localStorage.removeItem("painel_autenticado");
-      window.location.href = "login.html";
+    function aplicarTemaVisual(corTema) {
+      document.documentElement.style.setProperty('--theme-color', mapaCoresHex[corTema] || mapaCoresHex.zinc);
     }
 
-    async function selecionarAtivo(ticker, silencioso = false) {
-      ativoAtual = ticker;
-      ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'BBAS3', 'BTC'].forEach(t => {
-        const btn = document.getElementById(`btn-${t}`);
-        if (t === ticker) {
-          btn.className = "p-3 bg-zinc-950 border-2 border-emerald-500/80 rounded-xl text-left transition-all space-y-0.5";
-        } else {
-          btn.className = "p-3 bg-zinc-950 border-2 border-zinc-800 rounded-xl text-left transition-all space-y-0.5";
+    function atualizarIndicadorPassos(passoAtivo) {
+      for (let i = 0; i <= 3; i++) {
+        const btn = document.getElementById(`step-${i}-indicator`);
+        if (btn) {
+          if (i === passoAtivo) {
+            btn.className = "theme-text font-bold transition-all flex items-center gap-1";
+          } else {
+            btn.className = "text-slate-500 transition-all flex items-center gap-1";
+          }
         }
-      });
+      }
+    }
 
-      const info = dadosEmpresas[ticker];
-      document.getElementById('info-ticker').innerText = info.nome;
-      document.getElementById('info-setor').innerText = info.setor;
-      document.getElementById('val-pl').innerText = info.pl;
-      document.getElementById('val-dy').innerText = info.dyStr;
-      document.getElementById('val-roe').innerText = info.roe;
-      document.getElementById('val-graham').innerText = info.refVal;
+    function minutosParaHora(m) {
+      const h = Math.floor(m / 60); const min = m % 60;
+      return `${h < 10 ? '0' + h : h}:${min < 10 ? '0' + min : min}`;
+    }
 
+    const inputData = document.getElementById('data-agendamento');
+    const hojeStr = new Date().toISOString().split('T')[0];
+    inputData.min = hojeStr; inputData.value = hojeStr;
+
+    async function carregarDadosFirebase() {
+      if (!window.dbFirestore) return;
       try {
-        const resposta = await fetch(`${API_URL}/${ticker}`);
-        if (resposta.ok) {
-          const dadosAPI = await resposta.json();
-          info.precoBase = dadosAPI.preco_atual;
-          info.precoStr = `R$ ${dadosAPI.preco_atual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-          document.getElementById('info-preco').innerText = info.precoStr;
-        } else { throw new Error(); }
-      } catch (e) {
-        document.getElementById('info-preco').innerText = info.precoStr;
-      }
+        const docRef = window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_bellan_multi");
+        const docSnap = await window.fsGetDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && data.barbeiros && data.barbeiros.length > 0) {
+            dadosGlobais = { ...dadosGlobais, ...data };
+          }
+        }
 
-      if (!silencioso) {
-        document.getElementById('trade-entrada').value = info.precoBase.toFixed(2);
-        document.getElementById('trade-stop').value = (info.precoBase * 0.98).toFixed(2);
-        document.getElementById('calc-preco-compra').value = info.precoBase;
-      }
+        if (!dadosGlobais.barbeiros.some(b => b.id === 'bellan')) {
+          dadosGlobais.barbeiros.unshift({ id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] });
+        }
 
-      renderizarGraficoTrading(info.precoBase, info.volatilidade);
-      calcularTrade();
-      calcularPrecoMedio();
+        const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi");
+        const agendamentosSnap = await window.fsGetDocs(agendamentosRef);
+        
+        dadosGlobais.barbeiros.forEach(b => b.agendamentos = []);
+        agendamentosSnap.forEach((docItem) => {
+          const ag = docItem.data();
+          const barbeiroAlvo = dadosGlobais.barbeiros.find(b => b.id === ag.barbeiroId);
+          if (barbeiroAlvo) {
+            if (!barbeiroAlvo.agendamentos) barbeiroAlvo.agendamentos = [];
+            barbeiroAlvo.agendamentos.push(ag);
+          }
+        });
+
+        aplicarTemaVisual(dadosGlobais.corTema || 'zinc');
+        if (dadosGlobais.nomeBarbearia) document.getElementById('nome-barbearia-cliente').innerText = dadosGlobais.nomeBarbearia;
+        if (dadosGlobais.logoUrl) document.getElementById('container-logo').innerHTML = `<img src="${dadosGlobais.logoUrl}" class="w-full h-full object-cover">`;
+
+        renderizarBarbeirosCliente();
+        atualizarIndicadorPassos(0);
+      } catch (err) {
+        renderizarBarbeirosCliente();
+        atualizarIndicadorPassos(0);
+      }
     }
 
-    async function forcarAtualizacaoManual() {
-      const icone = document.getElementById('icone-refresh');
-      icone.classList.add('animate-spin');
-      await selecionarAtivo(ativoAtual, true);
-      setTimeout(() => icone.classList.remove('animate-spin'), 800);
-    }
+    function renderizarBarbeirosCliente() {
+      const container = document.getElementById('container-barbeiros-cliente');
+      container.innerHTML = '';
 
-    setInterval(() => {
-      selecionarAtivo(ativoAtual, true);
-    }, 30000);
-
-    function renderizarGraficoTrading(preco, vol) {
-      const ctx = document.getElementById('graficoTrading').getContext('2d');
-      if (graficoTradingInst) graficoTradingInst.destroy();
-
-      let labels = [], valores = [];
-      // Constrói os pontos de trás para a frente a partir do preço real para evitar saltos bruscos
-      let valorAtual = preco;
-      valores.unshift(valorAtual);
-      labels.unshift('');
-
-      for (let i = 0; i < 19; i++) {
-        valorAtual -= (Math.random() - 0.48) * (preco * vol * 0.03);
-        valores.unshift(Number(valorAtual.toFixed(2)));
-        labels.unshift('');
+      if (!barbeiroEscolhido && dadosGlobais.barbeiros.length > 0) {
+        barbeiroEscolhido = dadosGlobais.barbeiros[0];
       }
 
-      graficoTradingInst = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{ data: valores, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.08)', borderWidth: 2, fill: true, tension: 0.2, pointRadius: 1 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#18181b' } }, y: { grid: { color: '#18181b' }, ticks: { color: '#71717a', font: { size: 9, family: 'monospace' } } } } }
+      dadosGlobais.barbeiros.forEach((b) => {
+        const isSel = barbeiroEscolhido && barbeiroEscolhido.id === b.id;
+        const div = document.createElement('div');
+        div.className = isSel ? "p-4 border-2 theme-border rounded-2xl bg-slate-800/80 cursor-pointer flex items-center justify-between shadow" : "p-4 border-2 border-slate-800 rounded-2xl cursor-pointer bg-slate-950/40 flex items-center justify-between";
+        div.onclick = () => {
+          barbeiroEscolhido = b;
+          renderizarBarbeirosCliente();
+        };
+        div.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold theme-text border border-slate-700">${b.nome.charAt(0)}</div>
+            <div>
+              <div class="font-bold text-sm text-slate-100">${b.nome} ${b.id === 'bellan' ? '(Proprietário)' : ''}</div>
+              <div class="text-xs text-slate-400">Profissional Especializado</div>
+            </div>
+          </div>
+          <input type="radio" name="barbeiro" ${isSel ? 'checked' : ''} class="w-4 h-4 accent-indigo-500">
+        `;
+        container.appendChild(div);
       });
     }
 
-    function calcularFinancas() {
-      const receita = Number(document.getElementById('fin-receita').value) || 0;
-      const despesas = Number(document.getElementById('fin-despesas').value) || 0;
-      const saldo = receita - despesas;
-      const taxa = receita > 0 ? (saldo / receita) * 100 : 0;
+    function irParaPasso(passo) {
+      document.getElementById('step-0').classList.add('hidden');
+      document.getElementById('step-1').classList.add('hidden');
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-3').classList.add('hidden');
 
-      document.getElementById('fin-saldo').innerText = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('fin-taxa').innerText = `${taxa.toFixed(1)}%`;
-      document.getElementById('fin-saldo').className = saldo >= 0 ? "text-sm font-mono font-bold text-emerald-400 mt-1" : "text-sm font-mono font-bold text-rose-400 mt-1";
-    }
-
-    function calcularTrade() {
-      const entrada = Number(document.getElementById('trade-entrada').value) || 0;
-      const stop = Number(document.getElementById('trade-stop').value) || 0;
-      const riscoMax = Number(document.getElementById('trade-risco-max').value) || 0;
-      const riscoAcao = entrada - stop;
-
-      let qtd = 0, alvo = 0, lucro = 0;
-      if (riscoAcao > 0) {
-        qtd = Math.floor(riscoMax / riscoAcao);
-        alvo = entrada + (riscoAcao * 2);
-        lucro = (alvo - entrada) * qtd;
+      if (passo === 0) {
+        document.getElementById('step-0').classList.remove('hidden');
+        document.getElementById('next-btn').innerHTML = '<span>Avançar para Serviços</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+        currentStep = 0;
+      } else if (passo === 1) {
+        carregarServicosCliente();
+        document.getElementById('step-1').classList.remove('hidden');
+        document.getElementById('next-btn').innerHTML = '<span>Avançar para Horários</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+        currentStep = 1;
+      } else if (passo === 2) {
+        carregarHorariosCliente();
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('next-btn').innerHTML = '<span>Confirmar Dados</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+        currentStep = 2;
+      } else if (passo === 3) {
+        document.getElementById('nome-barbeiro-resumo').innerText = barbeiroEscolhido.nome;
+        document.getElementById('step-3').classList.remove('hidden');
+        document.getElementById('next-btn').innerHTML = '<span>Finalizar Agendamento</span> <i data-lucide="check" class="w-4 h-4"></i>';
+        currentStep = 3;
       }
-      document.getElementById('trade-qtd').innerText = `${qtd} un`;
-      document.getElementById('trade-alvo').innerText = alvo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
-      document.getElementById('trade-lucro').innerText = lucro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
+      atualizarIndicadorPassos(currentStep);
+      lucide.createIcons();
     }
 
-    function obterTrades() { return JSON.parse(localStorage.getItem("painel_trades") || "[]"); }
-    function registarTrade() {
-      const entrada = Number(document.getElementById('trade-entrada').value) || 0;
-      const stop = Number(document.getElementById('trade-stop').value) || 0;
-      const riscoMax = Number(document.getElementById('trade-risco-max').value) || 0;
-      const riscoAcao = entrada - stop;
-      if (riscoAcao <= 0) { alert("Stop Loss deve ser inferior à entrada!"); return; }
-
-      const qtd = Math.floor(riscoMax / riscoAcao);
-      const alvo = entrada + (riscoAcao * 2);
-      const trades = obterTrades();
-      trades.unshift({ id: Date.now(), ativo: ativoAtual, entrada, alvo, stop, qtd });
-      localStorage.setItem("painel_trades", JSON.stringify(trades));
-      renderizarTabelaTrades();
-      alert("Operação registada com sucesso!");
-    }
-    function apagarTrade(id) {
-      localStorage.setItem("painel_trades", JSON.stringify(obterTrades().filter(t => t.id !== id)));
-      renderizarTabelaTrades();
-    }
-    function renderizarTabelaTrades() {
-      const trades = obterTrades();
-      const tbody = document.getElementById('tabela-trades');
-      document.getElementById('contador-trades').innerText = `${trades.length} operações`;
-      if (trades.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-zinc-500">Sem trades registados.</td></tr>`; return; }
-      tbody.innerHTML = trades.map(t => `
-        <tr class="hover:bg-zinc-800/50">
-          <td class="p-2 font-bold text-emerald-400">${t.ativo}</td>
-          <td class="p-2">R$ ${t.entrada.toFixed(2)}</td>
-          <td class="p-2 text-emerald-400">R$ ${t.alvo.toFixed(2)}</td>
-          <td class="p-2 text-rose-400">R$ ${t.stop.toFixed(2)}</td>
-          <td class="p-2 text-center font-bold">${t.qtd} un</td>
-          <td class="p-2 text-center"><button onclick="apagarTrade(${t.id})" class="text-rose-400 hover:text-rose-300">✕</button></td>
-        </tr>
-      `).join('');
+    function carregarServicosCliente() {
+      const servicos = barbeiroEscolhido.servicos && barbeiroEscolhido.servicos.length ? barbeiroEscolhido.servicos : [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }];
+      const container = document.getElementById('container-servicos-cliente');
+      container.innerHTML = '';
+      
+      servicos.forEach((s, idx) => {
+        if (idx === 0 && !servicoEscolhido) servicoEscolhido = s;
+        const isSel = servicoEscolhido && servicoEscolhido.nome === s.nome;
+        const label = document.createElement('label');
+        label.className = isSel ? "flex items-center justify-between p-3.5 border-2 theme-border rounded-2xl bg-slate-800/80 cursor-pointer shadow" : "flex items-center justify-between p-3.5 border-2 border-slate-800 rounded-2xl cursor-pointer bg-slate-950/40";
+        label.onclick = () => { servicoEscolhido = s; carregarServicosCliente(); };
+        label.innerHTML = `
+          <div class="flex items-center gap-3">
+            <input type="radio" name="servico" ${isSel ? 'checked' : ''} class="w-4 h-4 accent-indigo-500">
+            <div>
+              <div class="font-bold text-sm text-slate-100">${s.nome}</div>
+              <div class="text-xs text-slate-400">⏱️ ${s.duracao || 30} min</div>
+            </div>
+          </div>
+          <span class="font-bold text-sm ${isSel ? 'theme-text' : 'text-slate-400'}">R$ ${s.preco}</span>
+        `;
+        container.appendChild(label);
+      });
     }
 
-    function calcularPrecoMedio() {
-      const qA = Number(document.getElementById('calc-qtd-atual').value) || 0;
-      const pA = Number(document.getElementById('calc-pm-atual').value) || 0;
-      const qN = Number(document.getElementById('calc-qtd-nova').value) || 0;
-      const pN = Number(document.getElementById('calc-preco-compra').value) || 0;
-      const totalQ = qA + qN;
-      const novoPM = totalQ > 0 ? ((qA * pA) + (qN * pN)) / totalQ : 0;
-      document.getElementById('calc-resultado-pm').innerText = novoPM.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 });
+    async function carregarHorariosCliente() {
+      const dataSel = inputData.value;
+      if (!dataSel) return;
+      
+      const partes = dataSel.split('-');
+      const diaDaSemana = new Date(partes[0], partes[1] - 1, partes[2]).getDay();
+      const diasFechados = barbeiroEscolhido.diasFechados || [];
+
+      if (diasFechados.includes(diaDaSemana)) {
+        document.getElementById('alerta-dia-fechado').classList.remove('hidden');
+        document.getElementById('wrapper-horarios').classList.add('hidden');
+        document.getElementById('next-btn').disabled = true;
+        return;
+      } else {
+        document.getElementById('alerta-dia-fechado').classList.add('hidden');
+        document.getElementById('wrapper-horarios').classList.remove('hidden');
+        document.getElementById('next-btn').disabled = false;
+      }
+
+      const duracaoServico = servicoEscolhido ? (servicoEscolhido.duracao || 30) : 30;
+      document.getElementById('info-duracao-servico').innerText = `Duração exata: ${duracaoServico} min`;
+
+      let bloqueadosDoDia = [];
+      if (barbeiroEscolhido.agendamentos) {
+        barbeiroEscolhido.agendamentos.forEach(ag => {
+          if (ag.data === dataSel && ag.horariosOcupados) {
+            bloqueadosDoDia = [...bloqueadosDoDia, ...ag.horariosOcupados];
+          }
+        });
+      }
+
+      const pausasPadrao = barbeiroEscolhido.horariosPausaPadrao || [];
+      const grid = document.getElementById('horarios-grid-cliente');
+      grid.innerHTML = '';
+      horarioEscolhido = "";
+
+      let inicioMin = 7 * 60; const fimMin = 22 * 60;
+      let horariosGerados = [];
+
+      while (inicioMin + duracaoServico <= fimMin) {
+        const horaInicioStr = minutosParaHora(inicioMin);
+        let indisponivel = false;
+        let afetadosTemp = [];
+        
+        let mCheck = inicioMin;
+        while (mCheck < inicioMin + duracaoServico) {
+          const slotStr = minutosParaHora(Math.floor(mCheck / 30) * 30);
+          if (pausasPadrao.includes(slotStr) || bloqueadosDoDia.includes(slotStr)) {
+            indisponivel = true; break;
+          }
+          afetadosTemp.push(minutosParaHora(mCheck));
+          mCheck += 30;
+        }
+
+        if (!indisponivel) horariosGerados.push({ hora: horaInicioStr, afetados: afetadosTemp });
+        inicioMin += duracaoServico; 
+      }
+
+      if (horariosGerados.length === 0) {
+        grid.innerHTML = `<p class="col-span-full text-xs text-slate-500 text-center py-4">Nenhum horário disponível.</p>`;
+        return;
+      }
+
+      horariosGerados.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.innerText = item.hora;
+        if (idx === 0) {
+          horarioEscolhido = item.hora; horariosOcupadosPeloServico = item.afetados;
+          btn.className = "p-2 border-2 theme-border bg-slate-800 theme-text rounded-lg text-xs font-bold shadow-sm";
+        } else {
+          btn.className = "p-2 border border-slate-800 bg-slate-950/40 rounded-lg text-xs font-bold text-slate-300";
+        }
+        btn.onclick = () => {
+          horarioEscolhido = item.hora; horariosOcupadosPeloServico = item.afetados;
+          carregarHorariosCliente();
+        };
+        grid.appendChild(btn);
+      });
     }
 
-    function copiarResumoWhatsApp() {
-      const info = dadosEmpresas[ativoAtual];
-      const texto = `📊 *Trading Desk - ${info.nome}*\n💰 Cotação Real: ${info.precoStr}\n• P/L: ${info.pl} | DY: ${info.dyStr}`;
-      navigator.clipboard.writeText(texto).then(() => alert("Resumo copiado para a área de transferência!"));
-    }
+    async function nextStep() {
+      if (currentStep === 0) {
+        if (!barbeiroEscolhido) { alert("Selecione um profissional!"); return; }
+        irParaPasso(1);
+      } else if (currentStep === 1) {
+        irParaPasso(2);
+      } else if (currentStep === 2) {
+        if (!horarioEscolhido) { alert("Selecione um horário!"); return; }
+        irParaPasso(3);
+      } else if (currentStep === 3) {
+        const nome = document.getElementById('nome-cliente').value.trim();
+        const whats = document.getElementById('whats-cliente').value.trim();
+        if (!nome || !whats) { alert("Preencha todos os campos!"); return; }
 
-    selecionarAtivo('VALE3');
-    calcularFinancas();
-    renderizarTabelaTrades();
+        const btnFinalizar = document.getElementById('next-btn');
+        btnFinalizar.disabled = true;
+        btnFinalizar.innerText = "A verificar disponibilidade...";
+
+        try {
+          const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi");
+          const agendamentosSnap = await window.fsGetDocs(agendamentosRef);
+          
+          let conflito = false;
+          agendamentosSnap.forEach((docItem) => {
+            const ag = docItem.data();
+            if (ag.barbeiroId === barbeiroEscolhido.id && ag.data === inputData.value && ag.horariosOcupados) {
+              const temIntersecao = horariosOcupadosPeloServico.some(h => ag.horariosOcupados.includes(h));
+              if (temIntersecao) conflito = true;
+            }
+          });
+
+          if (conflito) {
+            alert("⚠️ Este horário acabou de ser ocupado por outro cliente! Por favor, escolha outro horário.");
+            btnFinalizar.disabled = false;
+            irParaPasso(2);
+            return;
+          }
+
+          await window.fsAddDoc(agendamentosRef, {
+            barbeiroId: barbeiroEscolhido.id, cliente: nome, servico: servicoEscolhido.nome,
+            preco: servicoEscolhido.preco, data: inputData.value, horario: horarioEscolhido,
+            whatsapp: whats, horariosOcupados: horariosOcupadosPeloServico, criadoEm: new Date().toISOString()
+          });
+
+          const texto = `✅ Agendamento Confirmado com ${barbeiroEscolhido.nome} para ${nome} às ${horarioEscolhido} (${servicoEscolhido.nome}).`;
+          navigator.clipboard.writeText(texto);
+
+          document.getElementById('step-3').classList.add('hidden');
+          document.getElementById('steps-indicator-wrapper').classList.add('hidden');
+          document.getElementById('footer-actions').classList.add('hidden');
+          document.getElementById('step-4').classList.remove('hidden');
+
+          if (barbeiroEscolhido.whats) {
+            let num = barbeiroEscolhido.whats.replace(/\D/g, '');
+            if (!num.startsWith('55')) num = '55' + num;
+            const link = `https://api.whatsapp.com/send?phone=${num}&text=${encodeURIComponent(texto)}`;
+            document.getElementById('container-botoes-manuais').innerHTML = `<a href="${link}" target="_blank" class="w-full py-3 bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2">Abrir WhatsApp</a>`;
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Erro ao finalizar o agendamento. Tente novamente.");
+          btnFinalizar.disabled = false;
+        }
+      }
+      lucide.createIcons();
+    }
   </script>
 </body>
 </html>
