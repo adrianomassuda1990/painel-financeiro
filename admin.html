@@ -84,10 +84,10 @@
     <!-- AVISO DE MODO DEMONSTRAÇÃO -->
     <div class="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl flex items-center gap-3 text-xs text-indigo-300">
       <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 shrink-0"></i>
-      <span>Estás a testar todos os recursos exclusivos do **Plano Premium**: relatórios avançados, automação de WhatsApp via Meta API, gestão de equipa e sub-agendas ilimitadas.</span>
+      <span>Estás a testar todos os recursos exclusivos do **Plano Premium**: relatórios avançados, gráfico de desempenho, automação de WhatsApp e sub-agendas ilimitadas.</span>
     </div>
 
-    <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS REFORÇADO -->
+    <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl">
         <p class="text-xs font-bold uppercase text-slate-400">Faturamento Mensal</p>
@@ -108,6 +108,26 @@
         <p class="text-xs font-bold uppercase text-slate-400">Taxa de Ocupação</p>
         <h3 class="text-2xl font-bold text-amber-400 mt-1">88.5%</h3>
         <span class="text-xs text-amber-300 mt-2 inline-block">Média dos profissionais</span>
+      </div>
+    </div>
+
+    <!-- 📊 GRÁFICO DE DESEMPENHO E FATURAMENTO SEMANAL -->
+    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
+          <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-400"></i> Gráfico de Desempenho e Faturamento (Últimos Dias)
+        </h2>
+        <span class="text-xs text-slate-400 font-mono">Atualizado em tempo real</span>
+      </div>
+      
+      <!-- Contentor do Gráfico de Barras Nativo -->
+      <div class="pt-4 pb-2">
+        <div class="grid grid-cols-7 gap-3 items-end h-48 border-b border-slate-800 pb-2" id="grafico-barras-container">
+          <!-- As colunas do gráfico serão injetadas dinamicamente aqui -->
+        </div>
+        <div class="grid grid-cols-7 gap-3 text-center text-[11px] text-slate-400 pt-2" id="grafico-legendas-container">
+          <!-- Dias da semana / datas -->
+        </div>
       </div>
     </div>
 
@@ -398,9 +418,63 @@
         atualizarSelectBarbeiros();
         carregarCamposPainel();
         atualizarMetricasEComissoesDashboard();
+        renderizarGraficoDesempenho();
       } catch (err) {
         console.error("Erro:", err);
       }
+    }
+
+    // 📊 Função para renderizar o Gráfico de Barras com base nos agendamentos reais
+    function renderizarGraficoDesempenho() {
+      const containerBarras = document.getElementById('grafico-barras-container');
+      const containerLegendas = document.getElementById('grafico-legendas-container');
+      containerBarras.innerHTML = '';
+      containerLegendas.innerHTML = '';
+
+      // Gerar os últimos 7 dias para o gráfico
+      const diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      let faturamentoPorDia = {};
+      let maxValor = 100; // Valor mínimo para escala
+
+      // Agrupar faturamento por data dos agendamentos de todos os barbeiros
+      dadosGerais.barbeiros.forEach(b => {
+        (b.agendamentos || []).forEach(ag => {
+          if (ag.data) {
+            faturamentoPorDia[ag.data] = (faturamentoPorDia[ag.data] || 0) + (Number(ag.preco) || 0);
+          }
+        });
+      });
+
+      // Obter os últimos 7 dias a partir de hoje
+      let ultimos7Dias = [];
+      for (let i = 6; i >= 0; i--) {
+        let d = new Date();
+        d.setDate(d.getDate() - i);
+        let isoStr = d.toISOString().split('T')[0];
+        let nomeDia = diasSemanaNomes[d.getDay()];
+        let val = faturamentoPorDia[isoStr] || 0;
+        if (val > maxValor) maxValor = val;
+        ultimos7Dias.push({ dia: nomeDia, valor: val, data: isoStr });
+      }
+
+      // Renderizar as barras proporcionalmente
+      ultimos7Dias.forEach(item => {
+        let alturaPercentual = Math.max(Math.round((item.valor / maxValor) * 100), 12); // Mínimo 12% para visibilidade
+
+        // Barra
+        const divBarraWrapper = document.createElement('div');
+        divBarraWrapper.className = "flex flex-col items-center h-full justify-end gap-1 group relative";
+        divBarraWrapper.innerHTML = `
+          <span class="text-[10px] font-mono text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity absolute -top-6 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">R$${item.valor}</span>
+          <div style="height: ${alturaPercentual}%" class="w-full bg-gradient-to-t from-indigo-700 to-indigo-500 rounded-t-lg transition-all duration-500 hover:brightness-125 shadow-lg"></div>
+        `;
+        containerBarras.appendChild(divBarraWrapper);
+
+        // Legenda
+        const divLegenda = document.createElement('div');
+        divLegenda.innerText = item.dia;
+        containerLegendas.appendChild(divLegenda);
+      });
     }
 
     function atualizarMetricasEComissoesDashboard() {
@@ -470,6 +544,7 @@
       renderizarBarbeirosEquipa();
       renderizarTudo();
       atualizarMetricasEComissoesDashboard();
+      renderizarGraficoDesempenho();
     }
 
     function converterLogoParaBase64(input) {
@@ -529,7 +604,6 @@
       }
     }
 
-    // 🚀 Botão Sair redireciona para a página principal (index.html)
     function sairParaPrincipal() {
       window.location.href = "index.html";
     }
@@ -732,6 +806,7 @@
       await carregarDadosServidor();
       renderizarAgendaDoDia();
       atualizarMetricasEComissoesDashboard();
+      renderizarGraficoDesempenho();
     }
 
     function renderizarDias() {
