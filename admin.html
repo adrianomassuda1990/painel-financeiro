@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM Technology | Painel Administrativo Premium (Demonstração)</title>
+  <title>AM Technology | Painel Demonstrativo Premium</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -38,18 +38,25 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8 flex justify-center items-start">
 
-  <!-- TELA DE LOGIN -->
+  <!-- TELA DE LOGIN COM SENHA VISÍVEL PARA DEMONSTRAÇÃO -->
   <div id="login-screen" class="w-full max-w-sm bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4 mt-12">
     <div class="text-center space-y-2">
       <div class="w-12 h-12 bg-indigo-900/50 text-indigo-400 rounded-full flex items-center justify-center mx-auto border border-indigo-500/30">
-        <i data-lucide="lock" class="w-6 h-6"></i>
+        <i data-lucide="eye" class="w-6 h-6"></i>
       </div>
       <h2 class="text-lg font-bold text-slate-100">AM Technology</h2>
-      <p class="text-xs text-slate-400">Painel Demonstração Premium (Insira a senha)</p>
+      <p class="text-xs text-slate-400">Acesso Livre de Demonstração (Plano Premium)</p>
     </div>
-    <input type="password" id="input-senha" placeholder="Digite a senha (padrão: 1234)..." class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
+    
+    <!-- Caixa informativa com a senha visível -->
+    <div class="p-3 bg-indigo-950/60 border border-indigo-500/30 rounded-xl text-center space-y-1">
+      <p class="text-xs text-indigo-300 font-medium">💡 Para testar livremente, utilize a senha:</p>
+      <p class="text-sm font-mono font-bold text-indigo-400 tracking-widest">1234</p>
+    </div>
+
+    <input type="password" id="input-senha" value="1234" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center font-mono tracking-widest">
     <button onclick="verificarSenha()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all shadow-lg">
-      Entrar no Painel Premium
+      Aceder à Demonstração
     </button>
   </div>
 
@@ -60,14 +67,20 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
       <div>
         <div class="flex items-center gap-2">
-          <h1 id="titulo-topo-admin" class="text-2xl font-bold text-slate-100 uppercase tracking-tight">Barbearia do Bellan</h1>
-          <span class="bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Plano Premium</span>
+          <h1 id="titulo-topo-admin" class="text-2xl font-bold text-slate-100 uppercase tracking-tight">Barbearia Executiva</h1>
+          <span class="bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Plano Premium (Demo)</span>
         </div>
-        <p class="text-xs text-slate-400 mt-1">AM Technology — Demonstração de Gestão Completa</p>
+        <p class="text-xs text-slate-400 mt-1">AM Technology — Demonstração Interativa para Clientes</p>
       </div>
       <button onclick="sair()" class="text-xs text-slate-400 hover:text-red-400 flex items-center gap-1 transition-all">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+        <i data-lucide="log-out" class="w-4 h-4"></i> Sair / Bloquear
       </button>
+    </div>
+
+    <!-- AVISO DE MODO DEMONSTRAÇÃO -->
+    <div class="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl flex items-center gap-3 text-xs text-indigo-300">
+      <i data-lucide="info" class="w-5 h-5 text-indigo-400 shrink-0"></i>
+      <span>Estás a testar o **Plano Premium da AM Technology**. Podes explorar os relatórios de faturamento, as sub-agendas e o cálculo automático de comissões.</span>
     </div>
 
     <!-- DASHBOARD DE FATURAMENTO E MÉTRICAS -->
@@ -114,7 +127,7 @@
       </div>
     </div>
 
-    <!-- SELECIONAR BARBEIRO ATIVO -->
+    <!-- SELECIONAR PROFISSIONAL ATIVO -->
     <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3 shadow-xl">
       <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
         <i data-lucide="user-check" class="w-5 h-5 text-slate-400"></i> A Gerir a Sub-Agenda de:
@@ -129,7 +142,7 @@
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="space-y-2">
-          <label class="block text-xs font-bold uppercase text-slate-400">Nome da Barbearia</label>
+          <label class="block text-xs font-bold uppercase text-slate-400">Nome do Estabelecimento</label>
           <input type="text" id="input-nome-barbearia" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
         </div>
         <div class="space-y-2">
@@ -161,10 +174,10 @@
         <i data-lucide="users" class="w-5 h-5 text-slate-400"></i> Profissionais da Equipa (Sub-agendas)
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
-        <input type="text" id="novo-barbeiro-nome" placeholder="Nome (Ex: Outro Barbeiro)" class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
+        <input type="text" id="novo-barbeiro-nome" placeholder="Nome (Ex: Carlos)" class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
         <input type="tel" id="novo-barbeiro-whats" placeholder="WhatsApp (Ex: 19999999999)" class="p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
         <button onclick="adicionarBarbeiro()" class="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1">
-          <i data-lucide="user-plus" class="w-4 h-4"></i> Adicionar Barbeiro
+          <i data-lucide="user-plus" class="w-4 h-4"></i> Adicionar Profissional
         </button>
       </div>
       <div class="space-y-2" id="lista-barbeiros-admin"></div>
@@ -177,16 +190,16 @@
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-          <label class="block text-xs font-bold uppercase text-slate-400">WhatsApp do Barbeiro Ativo</label>
+          <label class="block text-xs font-bold uppercase text-slate-400">WhatsApp do Profissional Ativo</label>
           <input type="tel" id="input-whats-barbeiro" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
         </div>
         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-          <label class="block text-xs font-bold uppercase text-slate-400">Nova Senha do Painel</label>
-          <input type="password" id="input-nova-senha" placeholder="Deixe em branco" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-100 focus:outline-none">
+          <label class="block text-xs font-bold uppercase text-slate-400">Senha Bloqueada para Demonstração</label>
+          <input type="password" value="1234" disabled class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-500 cursor-not-allowed">
         </div>
       </div>
-      <button onclick="salvarConfiguracoesServidor('Canais e senha atualizados!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all shadow-lg">
-        Guardar Canais e Senha
+      <button onclick="salvarConfiguracoesServidor('Canais atualizados!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all shadow-lg">
+        Guardar Canais
       </button>
     </div>
 
@@ -194,7 +207,7 @@
     <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
         <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
-          <i data-lucide="calendar" class="w-5 h-5 text-slate-400"></i> Agenda do Barbeiro Selecionado
+          <i data-lucide="calendar" class="w-5 h-5 text-slate-400"></i> Agenda do Profissional Selecionado
         </h2>
         <button onclick="copiarResumoDiaParaTodos()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 shadow-md">
           <i data-lucide="share-2" class="w-4 h-4"></i> Copiar Lista Completa
@@ -283,20 +296,20 @@
     lucide.createIcons();
 
     let dadosGerais = {
-      nomeBarbearia: "Barbearia do Bellan",
+      nomeBarbearia: "Barbearia Executiva",
       logoUrl: "",
       senhaBellan: "1234",
       corTema: "zinc",
       barbeiros: [
-        { id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [], horariosBloqueadosPorData: {} }
+        { id: 'carlos', nome: 'Carlos', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [], horariosBloqueadosPorData: {} }
       ]
     };
 
-    let barbeiroAtivoId = 'bellan';
+    let barbeiroAtivoId = 'carlos';
 
     function obterDadosBarbeiroAtivo() {
       if (!dadosGerais.barbeiros || dadosGerais.barbeiros.length === 0) {
-        dadosGerais.barbeiros = [{ id: 'bellan', nome: 'Bellan', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] }];
+        dadosGerais.barbeiros = [{ id: 'carlos', nome: 'Carlos', whats: '', servicos: [{ id: 'corte', nome: 'Corte de Cabelo', preco: 40, duracao: 40 }], diasFechados: [], horariosPausaPadrao: [] }];
       }
       return dadosGerais.barbeiros.find(b => b.id === barbeiroAtivoId) || dadosGerais.barbeiros[0];
     }
@@ -324,7 +337,7 @@
     async function carregarDadosServidor() {
       if (!window.dbFirestore) return;
       try {
-        const docRef = window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_bellan_multi");
+        const docRef = window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_demo_multi");
         const docSnap = await window.fsGetDoc(docRef);
         
         if (docSnap.exists()) {
@@ -334,7 +347,7 @@
           }
         }
 
-        const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi");
+        const agendamentosRef = window.fsCollection(window.dbFirestore, "agendamentos_demo_multi");
         const agendamentosSnap = await window.fsGetDocs(agendamentosRef);
         
         dadosGerais.barbeiros.forEach(b => b.agendamentos = []);
@@ -377,7 +390,7 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="p-3 font-medium text-white">${b.nome} ${b.id === 'bellan' ? '(Proprietário)' : ''}</td>
+          <td class="p-3 font-medium text-white">${b.nome}</td>
           <td class="p-3">${qtdServicosBarbeiro}</td>
           <td class="p-3">R$ ${faturamentoBarbeiro.toFixed(2).replace('.', ',')}</td>
           <td class="p-3 text-emerald-400 font-bold">R$ ${comissaoBarbeiro.toFixed(2).replace('.', ',')}</td>
@@ -395,7 +408,7 @@
       dadosGerais.barbeiros.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b.id;
-        opt.innerText = `💈 ${b.nome}`;
+        opt.innerText = `👤 ${b.nome}`;
         if (b.id === barbeiroAtivoId) opt.selected = true;
         select.appendChild(opt);
       });
@@ -408,7 +421,7 @@
 
     function carregarCamposPainel() {
       const bAtivo = obterDadosBarbeiroAtivo();
-      document.getElementById('input-nome-barbearia').value = dadosGerais.nomeBarbearia || "Barbearia do Bellan";
+      document.getElementById('input-nome-barbearia').value = dadosGerais.nomeBarbearia || "Barbearia Executiva";
       document.getElementById('input-whats-barbeiro').value = bAtivo.whats || "";
       document.getElementById('input-cor-tema').value = dadosGerais.corTema || "zinc";
       document.getElementById('titulo-topo-admin').innerText = dadosGerais.nomeBarbearia;
@@ -439,25 +452,23 @@
     }
 
     async function salvarConfiguracoesServidor(msg = "Salvo!") {
-      dadosGerais.nomeBarbearia = document.getElementById('input-nome-barbearia').value.trim() || "Barbearia do Bellan";
+      dadosGerais.nomeBarbearia = document.getElementById('input-nome-barbearia').value.trim() || "Barbearia Executiva";
       dadosGerais.corTema = document.getElementById('input-cor-tema').value;
       
       const bAtivo = obterDadosBarbeiroAtivo();
       bAtivo.whats = document.getElementById('input-whats-barbeiro').value.trim();
 
-      const novaSenha = document.getElementById('input-nova-senha').value.trim();
-      if (novaSenha) dadosGerais.senhaBellan = novaSenha;
+      dadosGerais.senhaBellan = "1234";
 
       try {
-        await window.fsSetDoc(window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_bellan_multi"), {
+        await window.fsSetDoc(window.fsDoc(window.dbFirestore, "configuracoes", "barbearia_demo_multi"), {
           nomeBarbearia: dadosGerais.nomeBarbearia,
           logoUrl: dadosGerais.logoUrl,
-          senhaBellan: dadosGerais.senhaBellan,
+          senhaBellan: "1234",
           corTema: dadosGerais.corTema,
           barbeiros: dadosGerais.barbeiros
         });
 
-        if (novaSenha) document.getElementById('input-nova-senha').value = '';
         alert(msg);
         await carregarDadosServidor();
       } catch (err) {
@@ -465,7 +476,6 @@
       }
     }
 
-    // 🔒 Função de verificação de senha blindada
     async function verificarSenha() {
       const senhaDigitada = document.getElementById('input-senha').value.trim();
       
@@ -475,14 +485,12 @@
         console.log("A usar dados locais de emergência...");
       }
 
-      const senhaCorreta = (dadosGerais && dadosGerais.senhaBellan) ? dadosGerais.senhaBellan : "1234";
-
-      if (senhaDigitada === senhaCorreta) {
+      if (senhaDigitada === "1234") {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('admin-content').classList.remove('hidden');
         carregarCamposPainel();
       } else {
-        alert("Senha incorreta! A senha atual é: " + senhaCorreta);
+        alert("Senha incorreta! Utilize a senha indicada: 1234");
       }
     }
 
@@ -494,10 +502,10 @@
         div.className = "p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-3";
         div.innerHTML = `
           <div>
-            <div class="text-sm font-bold text-slate-100">${b.nome} ${b.id === 'bellan' ? '(Proprietário)' : ''}</div>
+            <div class="text-sm font-bold text-slate-100">${b.nome}</div>
             <div class="text-xs text-slate-400">WhatsApp: ${b.whats || 'Não definido'}</div>
           </div>
-          ${b.id !== 'bellan' ? `<button onclick="removerBarbeiro(${idx})" class="p-2 text-slate-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+          ${dadosGerais.barbeiros.length > 1 ? `<button onclick="removerBarbeiro(${idx})" class="p-2 text-slate-500 hover:text-red-400 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
         `;
         container.appendChild(div);
       });
@@ -521,17 +529,17 @@
 
       document.getElementById('novo-barbeiro-nome').value = '';
       document.getElementById('novo-barbeiro-whats').value = '';
-      await salvarConfiguracoesServidor("Barbeiro adicionado!");
+      await salvarConfiguracoesServidor("Profissional adicionado!");
     }
 
     async function removerBarbeiro(index) {
-      if (dadosGerais.barbeiros[index].id === 'bellan') {
-        alert("Não pode remover o proprietário (Bellan).");
+      if (dadosGerais.barbeiros.length <= 1) {
+        alert("Deve manter pelo menos um profissional.");
         return;
       }
       dadosGerais.barbeiros.splice(index, 1);
-      barbeiroAtivoId = 'bellan';
-      await salvarConfiguracoesServidor("Barbeiro removido!");
+      barbeiroAtivoId = dadosGerais.barbeiros[0].id;
+      await salvarConfiguracoesServidor("Profissional removido!");
     }
 
     function renderizarAgendaDoDia() {
@@ -672,7 +680,7 @@
         if (idx + i < horariosLista.length) horariosOcupados.push(horariosLista[idx + i]);
       }
 
-      await window.fsAddDoc(window.fsCollection(window.dbFirestore, "agendamentos_bellan_multi"), {
+      await window.fsAddDoc(window.fsCollection(window.dbFirestore, "agendamentos_demo_multi"), {
         barbeiroId: bAtivo.id, cliente: nome, servico: servicoObj.nome, preco: servicoObj.preco,
         data: data, horario: horarioInicio, whatsapp: whats, horariosOcupados: horariosOcupados, criadoEm: new Date().toISOString()
       });
@@ -732,7 +740,7 @@
     }
 
     function renderizarTudo() { renderizarServicos(); renderizarDias(); renderizarHorariosPausaPadrao(); renderizarAgendaDoDia(); }
-    function sair() { window.location.href = 'index.html'; }
+    function sair() { window.location.reload(); }
   </script>
 </body>
 </html>
